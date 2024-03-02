@@ -39,10 +39,10 @@ export async function authApiDeleteTest() {
     
     const userDeleted = deleteRes && deleteRes.userDeleted;
     if(userDeleted) {
-        console.log(`Auth api delete user test... `, colors.fg.green, 'Ok', colors.fg.white);
+        console.log(`Auth api delete user test...`, colors.fg.green, 'Ok', colors.fg.white);
     } else {
         // console.log(`Auth api delete user test... `, colors.fg.crimson, 'Error', colors.fg.white);
-        console.log(`Auth api delete user test... `, colors.fg.red, 'Error', colors.fg.white);
+        console.log(`Auth api delete user test...`, colors.fg.red, 'Error', colors.fg.white);
     }
 }
 
@@ -70,21 +70,19 @@ export async function authApiFetchDataTest() {
     const api = expressAuth.authApi(userData);
     await api.registerUser();
     await api.confirmUserEmailWithPrivateKey();
-    await api.loginGetJwt();
+    const loginRes = await api.loginGetJwt();
 
     // User api
     const userApi = api.userApi();
-    await userApi.delete();
     
     // Fetch user data
     const userDataFetch = await userApi.data();
     await userApi.delete();
-    console.log(`User data fetch: `, userDataFetch);
 
     const userDataOk = userDataFetch && userDataFetch.user && userDataFetch.user.email;
     if(userDataOk) {
-        console.log(`Auth API Fetch data test... `, colors.fg.green, 'Ok', colors.fg.white);
+        console.log(`Auth API Fetch data test...`, colors.fg.green, 'Ok', colors.fg.white);
     } else {
-        console.log(`Auth API Fetch data test... `, colors.fg.red, 'Error', colors.fg.white);
+        console.log(`Auth API Fetch data test...`, colors.fg.red, 'Error', colors.fg.white);
     }
 }
