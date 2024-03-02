@@ -7,7 +7,8 @@ import axios from "axios";
  */
 function createHeaders(jwtToken = "") {
     let headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Cookie": ``,
     };
     if(jwtToken) {
         // Add jwt token
@@ -29,32 +30,15 @@ function createServerUrlAndEndpoint(url: string, endpoint = "") {
 }
 
 /**
- * If one of two urls exist, this will not throw an error, otherwise it will.
- */
-function validateUrlCanBeFetched(serverUrl = '') {
-    // First there are some checks to be performed
-    // Location is not defined in nodejs
-    const isUndefined = typeof(location) === 'undefined';
-    
-    if(!serverUrl && isUndefined) {
-        throw Error("Server url is required when the AuthenticationAPI is used in NodeJS");
-    }
-}
-
-/**
  * Create axios instance on the frontend or backend
  * 
- * @param {string} url (Optional on the frontend)
+ * @param {string} url 
  * @param {string} endpoint (Optional)
  * @param {string} jwtToken (Optional)
  */
-export default function createAxiosInstance(serverUrl = "", endpoint = "", jwtToken = '') {
-    // Validate urls
-    validateUrlCanBeFetched(serverUrl);
-    
+export default function createAxiosInstance(serverUrl: string, endpoint = "", jwtToken = '') {
     // Get base url
-    const actualServerUrl = serverUrl ? serverUrl : location.origin;
-    const baseUrl = createServerUrlAndEndpoint(actualServerUrl, endpoint);
+    const baseUrl = createServerUrlAndEndpoint(serverUrl, endpoint);
     
     // Headers
     const headers = createHeaders(jwtToken);

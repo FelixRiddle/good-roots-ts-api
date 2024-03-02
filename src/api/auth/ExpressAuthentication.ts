@@ -1,5 +1,6 @@
 import AuthAPI from "./FrontendAuthAPI";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+import UserData from "../../types/UserData";
 
 /**
  * Attempt to generalize app functions
@@ -26,7 +27,7 @@ export default class ExpressAuthentication {
      * 
      * @param {Object} userData 
      */
-    authApi(userData) {
+    authApi(userData: UserData) {
         const api = new AuthAPI(userData);
         
         return api;
@@ -44,7 +45,7 @@ export default class ExpressAuthentication {
      * 
      * @param {Object} userData User data 
      */
-    userApi(userData) {
+    userApi(userData: UserData) {
         throw Error("Conversion to 'UserAPI' not implemented");
     }
 }

@@ -1,3 +1,5 @@
+// const GOOD_ROOTS_URL: string = process.env.GOOD_ROOTS_URL ? process.env.GOOD_ROOTS_URL : "http://localhost:3000";
+
 const SERVER_URL_MAPPINGS = {
     // Frontends
     GOOD_ROOTS: process.env.GOOD_ROOTS_URL ? process.env.GOOD_ROOTS_URL : "http://localhost:3000",

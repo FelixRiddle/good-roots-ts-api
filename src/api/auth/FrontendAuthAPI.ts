@@ -39,7 +39,7 @@ export default class FrontendAuthAPI {
             console.log(`Server url: ${this.debug}`);
         }
         
-        this.setInstance(this.serverUrl);
+        this.instance = createAxiosInstance(this.serverUrl);
     }
     
     // --- Miscellaneous ---
@@ -70,7 +70,7 @@ export default class FrontendAuthAPI {
      */
     async confirmUserEmailWithPrivateKey() {
         // TODO: Available on the same server
-        const backdoorServerUrl = process.env.BACKDOOR_SERVER_ACCESS_URL;
+        const backdoorServerUrl = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
         if(!backdoorServerUrl) throw Error("You have to set 'BACKDOOR_SERVER_ACCESS_URL'");
         
         const api = new BackendServerAccessAPI();

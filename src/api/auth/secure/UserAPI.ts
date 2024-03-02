@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
+import FrontendAuthAPI from "../FrontendAuthAPI";
 import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 import createAxiosInstance from "../../../createAxiosInstance";
 
@@ -15,10 +16,10 @@ import DataResultType from "../../../types/server/authentication/user/DataResult
  * To handle protected endpoints
  */
 export default class UserAPI {
-    serverUrl: string;
-    debug: boolean;
+    serverUrl: string = "";
+    debug: boolean = false;
     instance: AxiosInstance;
-    userData: UserData;
+    userData: UserData = {};
     
     /**
      * 
@@ -26,15 +27,16 @@ export default class UserAPI {
      */
     constructor(debug=false) {
         this.debug = debug;
+
+        this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.AUTHENTICATION);
     }
     
     // --- Constructors ---
     // Other kind of constructors that I see more suitable than the main
     /**
      * 
-     * @param {AuthAPI} authApi 
      */
-    static fromAuthenticatedAPI(authApi, debug=false) {
+    static fromAuthenticatedAPI(authApi: FrontendAuthAPI, debug=false) {
         const api = new UserAPI(debug);
         api.serverUrl = authApi.serverUrl;
         api.instance = authApi.instance;
