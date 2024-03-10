@@ -57,6 +57,8 @@ export default class AuthMarkupController {
      * 
      * This is so tryhard
      * 
+     * It doesn't work with typescript
+     * 
      * @returns {Object}
      */
     getFormData(): UserData {
@@ -66,15 +68,18 @@ export default class AuthMarkupController {
         };
         
         for(const fieldId of this.formFieldsId) {
+            const fieldID: string = fieldId;
+            
             // Get input field
             // For typescript to work we have to cast it to HTMLInputElement
-            const inputField = <HTMLInputElement>document.getElementById(fieldId);
+            const inputField = <HTMLInputElement>document.getElementById(fieldID);
             if(!inputField) {
                 throw Error("Given input couldn't be found!");
             }
             
             // Set field value to the object with its id as key
-            resultObject[fieldId] = inputField.value;
+            const inputValue: string = inputField.value;
+            resultObject[fieldID] = inputValue;
         }
         
         return resultObject;

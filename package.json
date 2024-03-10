@@ -8,14 +8,12 @@
     "tsup": "^8.0.2",
     "typescript": "^5.4.2"
   },
-  
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
-  
   "dependencies": {
     "@types/argparse": "^2.0.14",
     "argparse": "^2.0.1",
