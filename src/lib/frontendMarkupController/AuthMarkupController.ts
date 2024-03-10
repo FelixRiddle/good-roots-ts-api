@@ -34,10 +34,11 @@ const AUTH_ACTION_DELETE = 4;
  */
 export default class AuthMarkupController {
     formFieldsId: Array<string> = [];
-    formAction = 0;
-    authAction: number
+    formAction: number = 0;
+    authAction: number = 0;
     
-    constructor() { }
+    constructor() {
+    }
     
     /**
      * Append form field id
