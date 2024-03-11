@@ -23,7 +23,7 @@
     "generate-password": "^1.7.1",
     "uuid": "^9.0.1"
   },
-  "name": "good-roots-ts-api",
+  "name": "felixriddle.good-roots-ts-api",
   "version": "1.0.0",
   "scripts": {
     "test": "ts-node src/cmd/index.ts --test",
