@@ -1,6 +1,7 @@
 import AuthAPI from "./FrontendAuthAPI";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import UserData from "../../types/UserData";
+import UserAPI from "./secure/UserAPI";
 
 /**
  * Attempt to generalize app functions
@@ -36,16 +37,10 @@ export default class ExpressAuthentication {
     /**
      * Go straight to user api
      * 
-     * TODO:
-     * Behavior
-     * 1) Should check if the user exist then login
-     * 2) If the user doesn't exist, should create and login
-     * However I don't need this right now, or do I?
-     * Would remove unnecesary lines from code
-     * 
-     * @param {Object} userData User data 
      */
-    userApi(userData: UserData) {
-        throw Error("Conversion to 'UserAPI' not implemented");
+    userApi(jwt: string): Promise<UserAPI> {
+        const userApi = UserAPI.fromJWT(jwt);
+        
+        return userApi;
     }
 }
