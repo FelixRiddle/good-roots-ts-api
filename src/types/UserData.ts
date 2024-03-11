@@ -1,5 +1,7 @@
 /**
  * User object
+ * 
+ * It's wrong to have so many '?'
  */
 interface UserData {
     confirmPassword?: string;
