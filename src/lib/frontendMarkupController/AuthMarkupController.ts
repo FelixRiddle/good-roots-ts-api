@@ -16,6 +16,8 @@ const AUTH_ACTION_REGISTER = 2;
 const AUTH_ACTION_LOGOUT = 3;
 const AUTH_ACTION_DELETE = 4;
 
+export type FieldTypes = "name" | "email" | "password" | "confirmPassword";
+
 /**
  * Auth markup controller
  * 
@@ -33,7 +35,7 @@ const AUTH_ACTION_DELETE = 4;
  * The id is the same name of the field in the object data
  */
 export default class AuthMarkupController {
-    formFieldsId: Array<string> = [];
+    formFieldsId: Array<FieldTypes> = [];
     formAction: number = 0;
     authAction: number = 0;
     
@@ -43,10 +45,8 @@ export default class AuthMarkupController {
     /**
      * Append form field id
      * 
-     * @param {string} id 
-     * @returns {Object}
      */
-    appendFormFieldId(id: string) {
+    appendFormFieldId(id: FieldTypes) {
         this.formFieldsId.push(id);
         
         return this;
@@ -68,18 +68,17 @@ export default class AuthMarkupController {
         };
         
         for(const fieldId of this.formFieldsId) {
-            const fieldID: string = fieldId;
             
             // Get input field
             // For typescript to work we have to cast it to HTMLInputElement
-            const inputField = <HTMLInputElement>document.getElementById(fieldID);
+            const inputField = <HTMLInputElement>document.getElementById(fieldId);
             if(!inputField) {
                 throw Error("Given input couldn't be found!");
             }
             
             // Set field value to the object with its id as key
             const inputValue: string = inputField.value;
-            resultObject[fieldID] = inputValue;
+            resultObject[fieldId] = inputValue;
         }
         
         return resultObject;
