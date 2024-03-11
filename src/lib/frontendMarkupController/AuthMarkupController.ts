@@ -137,8 +137,6 @@ export default class AuthMarkupController {
             return;
         }
         
-        console.log(`Bind ok!`);
-        
         // On submit click
         const thisObj = this;
         submitInput.addEventListener("click", async (e) => {
@@ -149,7 +147,7 @@ export default class AuthMarkupController {
             
             // For every action the user is redirected to home
             // For now is okay, but later on we want context on where the user was before authenticating
-            window.location.href = `${SERVER_URL_MAPPINGS.AUTHENTICATION}/home`;
+            window.location.href = `${SERVER_URL_MAPPINGS.GOOD_ROOTS}/home`;
         });
         
         return this;
