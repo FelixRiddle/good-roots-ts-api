@@ -42,6 +42,7 @@ export default class AuthMarkupController {
     formAction: number = 0;
     authAction: number = 0;
     responseResults: Array<ResponseResults> = [];
+    redirectAfterAction: boolean = true;
     
     constructor() {
     }
@@ -97,7 +98,7 @@ export default class AuthMarkupController {
         // TODO: Frontend validation
         const userData: UserData = this.getFormData();
         
-        const api = new FrontendAuthAPI(userData);
+        const api = new FrontendAuthAPI(userData, true);
         switch(this.authAction) {
             case AUTH_ACTION_LOGIN: {
                 const loginResult = await api.loginUser();
@@ -140,6 +141,8 @@ export default class AuthMarkupController {
      * @returns 
      */
     async bindOnSubmitClick() {
+        console.log(`Binding click event`);
+        
         // Get submit input element
         const submitId = "authFormSubmit";
         const submitInput = document.getElementById(submitId);
@@ -147,6 +150,7 @@ export default class AuthMarkupController {
             console.log(`Couldn't find submit input!`);
             return;
         }
+        console.log(`Submit input found`);
         
         // On submit click
         const thisObj = this;
@@ -156,11 +160,15 @@ export default class AuthMarkupController {
             // Perform the selected auth action
             await thisObj.executeAuthAction();
             
-            // For every action the user is redirected to home
-            // For now is okay, but later on we want context on where the user was before authenticating
-            const homeUrl = `${SERVER_URL_MAPPINGS.GOOD_ROOTS}/home`;
-            
-            window.location.href = homeUrl;
+            // Redirect if enabled
+            if(this.redirectAfterAction) {
+                // For every action the user is redirected to home
+                // For now is okay, but later on we want context on where the user was before authenticating
+                const homeUrl = `${SERVER_URL_MAPPINGS.GOOD_ROOTS}/home`;
+                console.log(`Home url: ${homeUrl}`);
+                
+                window.location.href = homeUrl;
+            }
         });
         
         return this;
@@ -198,6 +206,14 @@ export default class AuthMarkupController {
         this.authAction = AUTH_ACTION_DELETE;
         
         return this;
+    }
+    
+    // --- Configuration ---
+    /**
+     * Enable or disable redirection
+     */
+    toggleRedirection() {
+        this.redirectAfterAction = !this.redirectAfterAction;
     }
     
     // --- Presets ---
