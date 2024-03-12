@@ -6,6 +6,7 @@ import SERVER_URL_MAPPINGS from "./mappings/env/SERVER_URL_MAPPINGS";
 // Register input type
 import RegisterInputType from "./types/server/authentication/auth/RegisterInputType";
 import { FieldTypes } from "./lib/frontendMarkupController/AuthMarkupController";
+import UserData from "./types/UserData";
 
 export default {
     // Api's
@@ -20,6 +21,7 @@ export default {
 }
 
 export type {
-    RegisterInputType,
     FieldTypes,
+    RegisterInputType,
+    UserData,
 }
