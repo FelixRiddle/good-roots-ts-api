@@ -10,6 +10,8 @@ import FrontendAuthAPI from "../../api/auth/FrontendAuthAPI";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import UserAPI from "../../api/auth/secure/UserAPI";
 import UserData from "../../types/UserData";
+import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
+import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 
 const AUTH_ACTION_LOGIN = 1;
 const AUTH_ACTION_REGISTER = 2;
@@ -17,6 +19,7 @@ const AUTH_ACTION_LOGOUT = 3;
 const AUTH_ACTION_DELETE = 4;
 
 export type FieldTypes = "name" | "email" | "password" | "confirmPassword";
+export type ResponseResults = LoginResultType | RegisterResultType;
 
 /**
  * Auth markup controller
@@ -38,6 +41,7 @@ export default class AuthMarkupController {
     formFieldsId: Array<FieldTypes> = [];
     formAction: number = 0;
     authAction: number = 0;
+    responseResults: Array<ResponseResults> = [];
     
     constructor() {
     }
@@ -96,11 +100,17 @@ export default class AuthMarkupController {
         const api = new FrontendAuthAPI(userData);
         switch(this.authAction) {
             case AUTH_ACTION_LOGIN: {
-                await api.loginUser();
+                const loginResult = await api.loginUser();
+                if(loginResult) {
+                    this.responseResults.push(loginResult);
+                }
                 break;
             }
             case AUTH_ACTION_REGISTER: {
-                await api.registerUser();
+                const registerResult = await api.registerUser();
+                if(registerResult) {
+                    this.responseResults.push(registerResult);
+                }
                 break;
             }
             case AUTH_ACTION_LOGOUT: {
@@ -110,7 +120,8 @@ export default class AuthMarkupController {
             }
             case AUTH_ACTION_DELETE: {
                 const api = new UserAPI();
-                await api.delete();
+                const deleteResult = await api.delete();
+                
                 break;
             }
             default: {
@@ -147,7 +158,9 @@ export default class AuthMarkupController {
             
             // For every action the user is redirected to home
             // For now is okay, but later on we want context on where the user was before authenticating
-            window.location.href = `${SERVER_URL_MAPPINGS.GOOD_ROOTS}/home`;
+            const homeUrl = `${SERVER_URL_MAPPINGS.GOOD_ROOTS}/home`;
+            
+            window.location.href = homeUrl;
         });
         
         return this;

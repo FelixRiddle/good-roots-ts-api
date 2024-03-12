@@ -1,4 +1,6 @@
 {
+  "name": "felixriddle.good-roots-ts-api",
+  "version": "1.0.1",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/uuid": "^9.0.8",
@@ -23,8 +25,6 @@
     "generate-password": "^1.7.1",
     "uuid": "^9.0.1"
   },
-  "name": "felixriddle.good-roots-ts-api",
-  "version": "1.0.0",
   "scripts": {
     "test": "ts-node src/cmd/index.ts --test",
     "build": "tsup"
