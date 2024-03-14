@@ -8,11 +8,22 @@ import RegisterInputType from "./types/server/authentication/auth/RegisterInputT
 import { FieldTypes } from "./lib/frontendMarkupController/AuthMarkupController";
 import UserData from "./types/UserData";
 import PropertyType from "./types/server/property/PropertyType";
+import PropertyCompleteType from "./types/server/property/PropertyCompleteType";
+
+// Images
+import ImagesAPI from "./lib/property/images/ImagesAPI";
+import GuestImagesAPI from "./lib/property/images/GuestImagesAPI";
+
+import CarouselView from "./lib/property/views/CarouselView";
 
 export default {
     // Api's
     ExpressAuthentication,
     FrontendAuthAPI,
+    
+    CarouselView,
+    ImagesAPI,
+    GuestImagesAPI,
     
     // Markup
     AuthMarkupController,
@@ -24,6 +35,8 @@ export default {
 export type {
     FieldTypes,
     RegisterInputType,
-    PropertyType,
     UserData,
+    
+    PropertyCompleteType,
+    PropertyType,
 }
