@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import PropertyImages from "./PropertyImages.js";
+import createAxiosInstance from "../../../createAxiosInstance.js";
+import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS.js";
 
 /**
  * Images API
@@ -18,6 +20,7 @@ export default class ImagesAPI {
     propertyId: number;
     instance: AxiosInstance;
     propImgs: PropertyImages;
+    jwtToken: string;
     
     /**
      * Images api
@@ -25,16 +28,12 @@ export default class ImagesAPI {
      * @param {number} propertyId This property id
      * @param {PropertyImages} propertyImages Property images manager
      */
-    constructor(propertyId: number) {
-        const url = `${window.location.origin}/user/property/images`;
+    constructor(propertyId: number, jwtToken: string = '') {
+        const url = `${SERVER_URL_MAPPINGS.GOOD_ROOTS}/user/property/images`;
         console.log(`Url: `, url);
         
-        // Create axios instance
-        this.instance = axios.create({
-            baseURL: url,
-            timeout: 2000,
-            headers: {'Content-Type': 'application/json'}
-        });
+        this.instance = createAxiosInstance(url, '', jwtToken);
+        this.jwtToken = jwtToken;
         this.propertyId = propertyId;
         
         this.propImgs = new PropertyImages();

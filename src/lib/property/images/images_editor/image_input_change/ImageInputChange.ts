@@ -1,11 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import DebugPropertyImageUploadAPI from "../../../../../../../api/debug/DebugPropertyImageUploadAPI.js";
-import PropertyImagesUtils from "../../../../../config/PropertyImagesUtils.js";
-import propertyImagesConfiguration from "../../../../../config/propertyImagesConfig.js";
-import MessageController from "../../../../../messages/controller/MessagesController.js";
+import DebugPropertyImageUploadAPI from "../../../../../api/debug/DebugPropertyImageUploadAPI";
+import PropertyImageUtils from "../../PropertyImageUtils";
+import defaultPropertyImagesConfiguration from "../../../../config/defaultPropertyImagesConfiguration";
 import ImagesAPI from "../../ImagesAPI";
-import PropertyImages from '../../PropertyImages';
 
 // Executed at the start
 const IMAGES_NOT_ZERO = 0;
@@ -44,26 +42,28 @@ const COURSE_UUID = uuidv4();
  * TODO: [Ordered Images Input Controller]
  */
 export default class ImageInputChange {
-    startRules = [];
-    rules = [];
-    endRules = [];
+    startRules: Array<number> = [];
+    rules: Array<number> = [];
+    endRules: Array<number> = [];
     
     stop = false;
     
     // For the debugging api
     debugEnabled = false;
-    api: ImagesAPI;
     imagesInput: HTMLInputElement;
     propertyId: number;
-    propertyImages: PropertyImages;
+    
+    // Apis
+    api: ImagesAPI;
+    debugImageUploadApi: DebugPropertyImageUploadAPI | undefined;
     
     /**
      * 
      * @param {ImagesAPI} api 
      * @param {string} inputId Images input id
      */
-    constructor(api: ImagesAPI, inputId: string) {
-        const imagesInput = document.getElementById(inputId);
+    constructor(api: ImagesAPI, inputId: string, propertyId: number, debug=false) {
+        const imagesInput = document.getElementById(inputId) as HTMLInputElement;
         if(!imagesInput) {
             throw Error("The image input element doesn't exists!");
         } else {
@@ -71,22 +71,11 @@ export default class ImageInputChange {
         }
         this.api = api;
         this.imagesInput = imagesInput;
-    }
-    
-    /**
-     * Set property id
-     * 
-     * @param {number} id 
-     */
-    setPropertyId(id: number) {
-        this.propertyId = id;
-    }
-    
-    /**
-     * Set property images api
-     */
-    setPropertyImages(api: PropertyImages) {
-        this.propertyImages = api;
+        this.propertyId = propertyId;
+        
+        if(debug) {
+            this.enableDebug();
+        }
     }
     
     /**
@@ -96,19 +85,19 @@ export default class ImageInputChange {
         console.log(`[Image input change] Enabled debug`);
         
         // Debug
-        this.debugImageUploadAPI = new DebugPropertyImageUploadAPI();
+        this.debugImageUploadApi = new DebugPropertyImageUploadAPI(
+            ACTION_STAGE,
+            COURSE_UUID,
+            this.api.propImgs.names(),
+            this.api.jwtToken,
+        );
         console.log(`Uuid type: ${typeof(COURSE_UUID)}`);
         
-        // Identification information
-        this.debugImageUploadAPI.setActionStage(ACTION_STAGE);
-        this.debugImageUploadAPI.setCourseUUID(COURSE_UUID)
-        
         // Create first message
-        this.debugImageUploadAPI.createMessage(
+        this.debugImageUploadApi.createMessage(
             "Start process",
             "Start process of uploading an image",
-            0,
-            ""
+            1
         );
         
         // Tell the class that debug was enabled
@@ -120,7 +109,7 @@ export default class ImageInputChange {
      * 
      * @param {function} cb Callback
      */
-    async enableWithCallback(cb) {
+    async enableWithCallback(cb: () => void) {
         const thisObj = this;
         this.imagesInput.addEventListener("change", async (event) => {
             console.log(`Image has changed!`);
@@ -247,19 +236,19 @@ export default class ImageInputChange {
      * 
      */
     async sendMessageOnStop(
-        messageTitle,
-        message,
+        messageTitle: string,
+        message: string,
     ) {
         // Check for debug thingy
-        if(this.debugEnabled) {
+        if(this.debugImageUploadApi) {
             if(this.stop) {
-                await this.debugImageUploadAPI.createMessage(
+                await this.debugImageUploadApi.createMessage(
                     messageTitle,
                     message,
                     4,
                 );
             } else {
-                await this.debugImageUploadAPI.createMessage(
+                await this.debugImageUploadApi.createMessage(
                     messageTitle,
                     message,
                     2,
@@ -273,7 +262,7 @@ export default class ImageInputChange {
      */
     async imagesNotZeroFn() {
         // Check that there are files
-        const files = this.imagesInput.files;
+        const files = this.imagesInput.files as FileList;
         console.log(`Images: `, files.length);
         if(files.length === 0) {
             console.log("No images, stop");
@@ -293,9 +282,19 @@ export default class ImageInputChange {
      */
     async uploadImagesFn() {
         // Get form data from it
-        let formData = new FormData(document.getElementById("publish_image"));
+        const publishImageElement = document.getElementById("publish_image") as HTMLFormElement;
         
-        await this.debugImageUploadAPI.createMessage(
+        if(!publishImageElement) {
+            throw Error("Formulary doesn't exists or couldn't be found.");
+        }
+        
+        const formData = new FormData(publishImageElement);
+        
+        if(!this.debugImageUploadApi) {
+            return;
+        }
+        
+        await this.debugImageUploadApi.createMessage(
             "Send image",
             "Send image to the backend",
             2,
@@ -313,7 +312,8 @@ export default class ImageInputChange {
         // If the size is greater remove the images
         // TODO: This limit has to work on the backend too, and test it.
         // TODO: This limit has to work here on the frontend, and test it.
-        if(this.imagesInput.files.length >= propertyImagesConfiguration.maxImages) {
+        if(this.imagesInput.files &&
+            this.imagesInput.files.length >= defaultPropertyImagesConfiguration.maxImages) {
             // Get current images...
             // Idk where the 'getImagesNameArray' method went, it seems it was deleted, my bad.
             // let currentImages = thisObject.getImagesNameArray();
@@ -336,49 +336,63 @@ export default class ImageInputChange {
     removeHeavyImagesFn() {
         // Remove files that don't fit the size configuration
         // TODO: This looks ABSTRACTABLE 😤😤😤
-        for(const image of this.imagesInput.files) {
-            // Get image size
-            const bytesSize = image.size;
-            const sizeInMB = (bytesSize / (1024*1024)).toFixed(2);
-            console.log(`Image: `, image);
+        if(this.imagesInput.files) {
             
-            // Check that file sizes are below the maximum allowed
-            const maxSize = PropertyImagesUtils.maxFileSizeMB();
-            if(maxSize < sizeInMB) {
-                console.log(`Max size exceeded!`);
+            // Go through each image file
+            for(const image of this.imagesInput.files) {
                 
-                // Create message
-                const msgCtrl = new MessageController();
-                msgCtrl.insertMessage(`Max file size exceeded, file name of the heavy file: ${this.image.name}`, 4);
+                // Get image size
+                const bytesSize = image.size;
+                const sizeInMB = Number((bytesSize / (1024*1024)).toFixed(2));
+                console.log(`Image: `, image);
                 
-                // Stop code
-                this.stop = true;
+                // Check that file sizes are below the maximum allowed
+                const maxSize = PropertyImageUtils.maxFileSizeMB();
+                if(maxSize < sizeInMB) {
+                    console.log(`Max size exceeded!`);
+                    
+                    // Let's not inject html for now
+                    // // Create message
+                    // const msgCtrl = new MessageController();
+                    // msgCtrl.insertMessage(`Max file size exceeded, file name of the heavy file: ${this.image.name}`, 4);
+                    
+                    
+                    // Stop code
+                    this.stop = true;
+                }
             }
+            
+            // Send message on stop
+            this.sendMessageOnStop(
+                "Greater file size",
+                "Stop the code, when there are images that have a greater file size than they should"
+            );
         }
-        
-        // Send message on stop
-        this.sendMessageOnStop(
-            "Greater file size",
-            "Stop the code, when there are images that have a greater file size than they should"
-        );
     }
     
+    /**
+     * Remove images when finished
+     * 
+     * And push message
+     */
     async removeImagesWhenFinishedFn() {
         // Remove images from the input
         // We will use the names to check which ones do exist
-        this.imagesInput.value = [];
+        this.imagesInput.value = "";
         
-        // Send message on stop
-        await this.debugImageUploadAPI.createMessage(
-            "Remove images",
-            "Remove images from the input when finished",
-            2,
-        );
+        if(this.debugImageUploadApi) {
+            // Send message on stop
+            await this.debugImageUploadApi.createMessage(
+                "Remove images",
+                "Remove images from the input when finished",
+                2,
+            );
+        }
     }
     
     async updatePropertyImagesFn() {
         // Update images view
-        this.propertyImages.updatePropertyImages();
+        this.api.updatePropertyImages();
     }
     
     // --- Enable rules ---

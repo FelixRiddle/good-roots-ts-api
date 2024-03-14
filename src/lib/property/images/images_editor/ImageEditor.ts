@@ -30,7 +30,7 @@ export default class ImageEditor {
     collisions = [];
     
     inputId: string;
-    propertyId: string;
+    propertyId: number;
     api: ImagesAPI;
     propertyImages: PropertyImages;
     
@@ -44,17 +44,14 @@ export default class ImageEditor {
         
         // Get property id
         const paths = window.location.pathname.split("/");
-        const propertyId = paths[paths.length - 1];
+        const propertyId = Number(paths[paths.length - 1]);
         this.propertyId = propertyId;
         
         // Images API
         this.api = new ImagesAPI(propertyId);
         
         // Property images
-        this.propertyImages = new PropertyImages(this.api);
-        
-        // Set it back to the api, wondering if this is ok?
-        this.api.setPropertyImagesObject(this.propertyImages);
+        this.propertyImages = this.api.propImgs;
         
         // Set update callback
         const thisObj = this;
@@ -68,7 +65,7 @@ export default class ImageEditor {
         });
         
         // Trigger update
-        this.propertyImages.updatePropertyImages();
+        this.api.updatePropertyImages();
         
         // Add image views
         this.startAddImageViews();
@@ -132,7 +129,7 @@ export default class ImageEditor {
                 await THIS.api.removeImage(i);
                 
                 // Update images
-                THIS.propertyImages.updatePropertyImages();
+                THIS.api.updatePropertyImages();
             });
             
             // Push to the list
@@ -178,11 +175,10 @@ export default class ImageEditor {
      * uploaded or it collides with another image
      */
     async bindOnChange() {
-        const inputChange = new ImageInputChange(this.api, this.inputId);
-        inputChange.setPropertyId(this.propertyId);
-        inputChange.setPropertyImages(this.propertyImages);
-        
-        await inputChange.enableDebug();
+        // FIX: Disable debug on release
+        const inputChange = new ImageInputChange(
+            this.api, this.inputId, this.propertyId, true
+        );
         
         // Enable all rules
         inputChange.imagesNotZero();
@@ -206,7 +202,7 @@ export default class ImageEditor {
      */
     onSuccessImagesChange(imagesInput: HTMLInputElement) {
         // Update images view
-        this.propertyImages.updatePropertyImages();
+        this.api.updatePropertyImages();
         
         if(imagesInput && imagesInput.files) {
             // Update previous images input length
@@ -218,7 +214,7 @@ export default class ImageEditor {
             
             // Remove images from the input
             // We will use the names to check which ones do exist
-            imagesInput.value = [];
+            imagesInput.value = "";
         }
     }
 }

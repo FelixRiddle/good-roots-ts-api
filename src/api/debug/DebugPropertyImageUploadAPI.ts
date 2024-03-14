@@ -1,64 +1,41 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
-import DebugPropertyImageUploadModel from "../../debug/DebugPropertyImageUploadModel.js";
+import DebugPropertyImageUploadType from "../../types/server/debug/DebugPropertyImageUpload";
+import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+import createAxiosInstance from "../../createAxiosInstance";
+
+// 1) Frontend validation
+// 2) Folder creation and validation
+// 3) Backend validation
+// 4) Endpoint finishing touches
 
 /**
  * 
  */
 export default class DebugPropertyImageUploadAPI {
+    instance: AxiosInstance;
+    actionStage: number;
+    courseUuid: string;
+    imageNames: Array<string>;
     
-    constructor(serverUrl: string, jwtToken = '') {
-        this.setInstance(serverUrl, jwtToken);
-    }
-    
-    /**
-     * Create instance
-     * 
-     * @param {string} serverUrl The server url
-     * @param {string} jwtToken JWT Authentication token(optional)
-     */
-    setInstance(serverUrl: string, jwtToken = '') {
+    constructor(actionStage: number, courseUuid: string, imageNames: Array<string>, jwtToken = '') {
+        this.actionStage = actionStage;
+        this.courseUuid = courseUuid;
+        this.imageNames = imageNames;
         
-        // Create headers
-        let headers = {
-            "Content-Type": "application/json"
-        };
-        if(jwtToken) {
-            // Add jwt token
-            headers["Cookie"] = `_token=${jwtToken}`;
-        }
-        
-        // Location is not defined in nodejs
-        const isUndefined = typeof(location) === 'undefined';
-        if(!isUndefined) {
-            this.instance = axios.create({
-                withCredentials: true,
-                baseURL: `${location.origin}`,
-                timeout: 2000,
-                headers,
-            });
-        } else if(!serverUrl) {
-            throw Error("Server url is required when the AuthenticationAPI is used in NodeJS");
-        } else {
-            this.instance = axios.create({
-                withCredentials: true,
-                baseURL: `${serverUrl}`,
-                timeout: 2000,
-                headers,
-            });
-        }
+        this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.REAL_ESTATE, '', jwtToken);
     }
     
     // --- Information ---
-    setActionStage(actionStage) {
+    setActionStage(actionStage: number) {
         this.actionStage = actionStage;
     }
     
-    setCourseUUID(uuid){
+    setCourseUUID(uuid: string){
         this.courseUuid = uuid;
     }
     
-    setImageNames(images) {
+    setImageNames(images: Array<string>) {
         this.imageNames = images;
     }
     
@@ -66,13 +43,8 @@ export default class DebugPropertyImageUploadAPI {
     /**
      * Create message
      * 
-     * @param {*} title 
-     * @param {*} message 
-     * @param {*} status 
-     * @param {*} imageName 
-     * @returns 
      */
-    async createMessage(title, message, status) {
+    async createMessage(title: string, message: string, status: number) {
         if(!this.courseUuid) {
             throw Error("Course uuid can't be empty!");
         }
@@ -82,14 +54,14 @@ export default class DebugPropertyImageUploadAPI {
         }
         
         // Create message
-        const imageInfo = new DebugPropertyImageUploadModel(
+        const imageInfo: DebugPropertyImageUploadType = {
             title,
             message,
             status,
-            this.imageNames,
-            this.courseUuid,
-            this.actionStage,
-        );
+            imageNames: this.imageNames,
+            actionCourseUuid: this.courseUuid,
+            actionStage: this.actionStage,
+        };
         
         const res = await this.instance.post("/debug/model/debug_property_image_upload/create", {
             imageInfo,
@@ -100,6 +72,10 @@ export default class DebugPropertyImageUploadAPI {
                 return;
             });
         
-        return res.body;
+        if(res && res.data) {
+            return res.data;
+        } else {
+            return undefined;
+        }
     }
 }
