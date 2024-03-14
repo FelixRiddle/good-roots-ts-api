@@ -60,11 +60,8 @@ export default class UserAPI {
         api.instance = createAxiosInstance(url, "", token);
         
         // Get data
-        const resData = await api.data();
-        if(resData && resData.user) {
-            api.userData = resData.user;
-        }
-
+        await api.data();
+        
         return api;
     }
     
@@ -85,6 +82,11 @@ export default class UserAPI {
                 console.error(err);
                 return;
             });
+        
+        // Update data
+        if(res && res.data) {
+            this.userData = res.data;
+        }
         
         return res && res.data || undefined;
     }
@@ -127,7 +129,7 @@ export default class UserAPI {
     ): Promise<CreateResultType | undefined> {
         // Endpoint
         const endpoint: string = `/user/password/create/${token}`;
-
+        
         // Debugging
         if(this.debug) {
             const fullUrl = `${this.serverUrl}${endpoint}`;
