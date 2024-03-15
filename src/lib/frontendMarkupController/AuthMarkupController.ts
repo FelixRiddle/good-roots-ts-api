@@ -14,6 +14,7 @@ import LoginResultType from "../../types/server/authentication/auth/LoginResultT
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
 import RegisterInputType from "../../types/server/authentication/auth/RegisterInputType";
+import DeleteResultType from "../../types/server/authentication/user/DeleteResultType";
 
 const AUTH_ACTION_LOGIN = 1;
 const AUTH_ACTION_REGISTER = 2;
@@ -21,7 +22,7 @@ const AUTH_ACTION_LOGOUT = 3;
 const AUTH_ACTION_DELETE = 4;
 
 export type FieldTypes = "name" | "email" | "password" | "confirmPassword";
-export type ResponseResults = LoginResultType | RegisterResultType;
+export type ResponseResults = LoginResultType | RegisterResultType | DeleteResultType;
 
 /**
  * Auth markup controller
@@ -140,9 +141,20 @@ export default class AuthMarkupController {
                 break;
             }
             case AUTH_ACTION_DELETE: {
-                const api = new UserAPI();
-                const deleteResult = await api.delete();
+                if(!userData.email || !userData.password) {
+                    throw Error("Either password or email is undefined");
+                }
                 
+                // Log in
+                const loginInput: LoginInputType = {
+                    email: userData.email,
+                    password: userData.password,
+                };
+                await api.loginUser(loginInput);
+                const userApi = api.userApi();
+                const deleteResult = await userApi.delete();
+                
+                this.responseResults.push(deleteResult);
                 break;
             }
             default: {
