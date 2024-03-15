@@ -1,10 +1,10 @@
-import UserData from "../../../UserData";
 import Status from "../../../Status";
+import CompleteUserData from "../../../CompleteUserData";
 
 /**
  * 
  */
 export default interface DataResultType {
-    user: UserData | undefined,
+    user: CompleteUserData | undefined,
     messages: Array<Status>,
 }
