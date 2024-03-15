@@ -9,6 +9,7 @@ import CreateResultType from "../../types/server/authentication/auth/password/Cr
 import DeleteResultType from "../../types/server/authentication/user/DeleteResultType";
 import DataResultType from "../../types/server/authentication/user/DataResultType";
 import CompleteUserData from "../../types/CompleteUserData";
+import PropertyAPI from "./property/PropertyAPI";
 
 /**
  * User API
@@ -16,6 +17,7 @@ import CompleteUserData from "../../types/CompleteUserData";
  * To handle protected endpoints
  */
 export default class UserAPI {
+    token: string;
     serverUrl: string = "";
     debug: boolean = false;
     instance: AxiosInstance;
@@ -25,7 +27,8 @@ export default class UserAPI {
      * 
      * @param debug 
      */
-    constructor(debug=false) {
+    constructor(instance: AxiosInstance, token: string, debug=false) {
+        this.token = token;
         this.debug = debug;
 
         this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.AUTHENTICATION);
@@ -37,9 +40,10 @@ export default class UserAPI {
      * 
      */
     static fromAuthenticatedAPI(authApi: FrontendAuthAPI, debug=false) {
-        const api = new UserAPI(debug);
+        if(!authApi.token) throw Error("Token not found on AuthenticationAPI");
+        
+        const api = new UserAPI(authApi.instance, authApi.token, debug);
         api.serverUrl = authApi.serverUrl;
-        api.instance = authApi.instance;
         
         return api;
     }
@@ -65,17 +69,9 @@ export default class UserAPI {
      * 
      */
     static async fromJWT(token: string, debug=false) {
-        const api = new UserAPI(debug);
-        
-        // Url
         const url = SERVER_URL_MAPPINGS.AUTHENTICATION;
-        api.serverUrl = url;
-        
-        // Create instance
-        api.instance = createAxiosInstance(url, "", token);
-        
-        // Get data
-        await api.data();
+        const instance = createAxiosInstance(url, "", token);
+        const api = new UserAPI(instance, token, debug);
         
         return api;
     }
@@ -168,5 +164,14 @@ export default class UserAPI {
         const responseData: CreateResultType = res.data;
         
         return responseData;
+    }
+    
+    // --- Conversion ---
+    /**
+     * Convert to property API
+     */
+    propertyApi(): PropertyAPI {
+        const api = new PropertyAPI(this.token);
+        return api;
     }
 }

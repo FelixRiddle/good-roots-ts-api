@@ -38,7 +38,7 @@ export default class PropertyAPI {
     async userProperties(pageNumber: number = 1): Promise<MyPropertiesPageResultType> {
         const endpoint = `/user/property/admin?page=${pageNumber}`;
         
-        const res: AxiosResponse = await this.instance.post(endpoint)
+        const res: AxiosResponse = await this.instance.get(endpoint)
             .then((res) => res)
             .catch((err) => {
                 throw Error(err);
