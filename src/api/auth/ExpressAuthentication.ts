@@ -1,6 +1,6 @@
 import AuthAPI from "./FrontendAuthAPI";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
-import UserAPI from "./secure/UserAPI";
+import UserAPI from "../user/UserAPI";
 
 /**
  * Attempt to generalize app functions

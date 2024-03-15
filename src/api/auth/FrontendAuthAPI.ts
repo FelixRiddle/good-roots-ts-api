@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import UserAPI from "./secure/UserAPI";
+import UserAPI from "../user/UserAPI";
 import UserData from "../../types/UserData";
 import createAxiosInstance from "../../createAxiosInstance";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";

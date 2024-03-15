@@ -8,7 +8,7 @@ import FrontendAuthAPI from "../../api/auth/FrontendAuthAPI";
 // Because these are backend subdomain it's not really important what name they have
 // just that they point to the exact location.
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
-import UserAPI from "../../api/auth/secure/UserAPI";
+import UserAPI from "../../api/user/UserAPI";
 import UserData from "../../types/UserData";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";

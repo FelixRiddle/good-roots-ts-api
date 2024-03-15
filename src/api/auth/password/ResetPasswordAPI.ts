@@ -66,16 +66,17 @@ export default class ResetPasswordAPI {
      * 
      * By sending reset email
      */
-    async sendResetEmail(): Promise<SendResetEmailResultType | undefined> {
-        const res = await this.instance.post("/auth/password/send_reset_email", {
+    async sendResetEmail(): Promise<SendResetEmailResultType> {
+        const res: AxiosResponse = await this.instance.post("/auth/password/send_reset_email", {
             email: this.userData.email,
         })
             .then((res) => res)
             .catch(err => {
                 console.error(err);
+                throw Error("Couldn't send reset email");
             });
         
-        return res && res.data || undefined;
+        return res.data;
     }
     
     /**
@@ -85,7 +86,7 @@ export default class ResetPasswordAPI {
      * 
      * We will use backdoor access here, because traversing html and reading emails is too much of a hassle.
      */
-    async createWithKey(): Promise<SendResetEmailResultType | undefined> {
+    async createWithKey(): Promise<SendResetEmailResultType> {
         if(!this.backdoorServerUrl) {
             throw Error("Backdoor server url not given");
         }
@@ -97,15 +98,16 @@ export default class ResetPasswordAPI {
         // Get backdoor key
         const key = await backdoorApi.createPasswordKey();
         
-        const res = await this.instance.post("/auth/password/create_with_key", {
+        const res: AxiosResponse = await this.instance.post("/auth/password/create_with_key", {
             ...this.userData,
             key
         })
             .then((res) => res)
             .catch(err => {
                 console.error(err);
+                throw Error("Couldn't create new password with key");
             });
         
-        return res && res.data || undefined;
+        return res.data;
     }
 }

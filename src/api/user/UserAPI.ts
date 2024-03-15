@@ -1,14 +1,14 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import FrontendAuthAPI from "../FrontendAuthAPI";
-import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
-import createAxiosInstance from "../../../createAxiosInstance";
+import FrontendAuthAPI from "../auth/FrontendAuthAPI";
+import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+import createAxiosInstance from "../../createAxiosInstance";
 
 // Types
-import CreateResultType from "../../../types/server/authentication/auth/password/CreateResultType";
-import DeleteResultType from "../../../types/server/authentication/user/DeleteResultType";
-import DataResultType from "../../../types/server/authentication/user/DataResultType";
-import CompleteUserData from "../../../types/CompleteUserData";
+import CreateResultType from "../../types/server/authentication/auth/password/CreateResultType";
+import DeleteResultType from "../../types/server/authentication/user/DeleteResultType";
+import DataResultType from "../../types/server/authentication/user/DataResultType";
+import CompleteUserData from "../../types/CompleteUserData";
 
 /**
  * User API
