@@ -10,6 +10,11 @@ import BackendServerAccessAPI from "../backdoor/BackendServerAccessAPI";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import LoginGetJwtResultType from "../../types/server/authentication/auth/LoginGetJwtResultType";
+import CompleteUserData from "../../types/CompleteUserData";
+import RegisterInputType from "../../types/server/authentication/auth/RegisterInputType";
+import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
+import BackdoorConfirmEmailInputType from "../../types/server/authentication/auth/BackdoorConfirmEmailInputType";
+import BackdoorConfirmEmailResultType from "../../types/server/authentication/auth/BackdoorConfirmEmailResultType";
 
 /**
  * Auth API
@@ -18,19 +23,16 @@ import LoginGetJwtResultType from "../../types/server/authentication/auth/LoginG
  */
 export default class FrontendAuthAPI {
     loggedIn = false;
-    userData: UserData;
     debug: boolean;
     serverUrl: string;
     instance: AxiosInstance;
+    token: string | undefined;
     
     /**
      * User data
      * 
-     * @param {Object} userData User data
-     * @param {boolean} [debug=false] Debug mode for this API
      */
-    constructor(userData: UserData, debug=false) {
-        this.userData = userData;
+    constructor(debug=false) {
         this.debug = debug;
         
         // Set server url
@@ -68,45 +70,55 @@ export default class FrontendAuthAPI {
     /**
      * Confirm user email with private key
      */
-    async confirmUserEmailWithPrivateKey() {
+    async confirmUserEmailWithPrivateKey(email: string): Promise<BackdoorConfirmEmailResultType> {
         // TODO: Available on the same server
         const backdoorServerUrl = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
-        if(!backdoorServerUrl) throw Error("You have to set 'BACKDOOR_SERVER_ACCESS_URL'");
+        if(!backdoorServerUrl) {
+            throw Error("You have to set 'BACKDOOR_SERVER_ACCESS_URL'")
+        };
         
+        // Access backend server and steal(jk) the key
         const api = new BackendServerAccessAPI();
         api.setUrl(backdoorServerUrl);
         const key = await api.emailConfirmationKey();
         
-        const res: AxiosResponse | undefined = await this.instance.post("/auth/email", { key, ...this.userData })
+        if(!key) {
+            throw Error("Couldn't fetch the user key");
+        }
+        
+        // Body
+        const body: BackdoorConfirmEmailInputType =  { key, email };
+        
+        // Send request
+        const res: AxiosResponse = await this.instance.post("/auth/email", body)
             .then((res) => res)
             .catch(err => {
                 console.error(err);
-                
-                return undefined;
+                throw Error("Couldn't fetch user data!");
             });
         
-        return res && res.data || undefined;
+        return res.data;
     }
     
     // --- Operations ---
     /**
      * Register user
      */
-    async registerUser(): Promise<RegisterResultType | undefined> {
+    async registerUser(userData: RegisterInputType): Promise<RegisterResultType> {
         const endpoint = "/auth/register";
         if(this.debug) {
             const fullUrl = `${this.serverUrl}${endpoint}`;
             console.log(`Complete url: ${fullUrl}`);
         }
         
-        const res: AxiosResponse | undefined = await this.instance.post(endpoint, this.userData)
+        const res: AxiosResponse = await this.instance.post(endpoint, userData)
             .then((res) => res)
             .catch((err) => {
                 console.error(err);
-                return undefined;
+                throw Error("Couldn't register the user");
             });
         
-        return res && res.data || undefined;
+        return res.data;
     }
     
     // --- Login ---
@@ -117,8 +129,14 @@ export default class FrontendAuthAPI {
      * 
      * @param {Object} res Axios response object
      */
-    #updateLoggedIn(res: AxiosResponse) {
-        this.setInstance(this.serverUrl, res.data.token);
+    #updateLoggedIn(res: LoginResultType | LoginGetJwtResultType) {
+        if(res.token) {
+            throw Error("Couldn't login");
+        }
+        
+        this.token = res.token;
+        
+        this.setInstance(this.serverUrl, this.token);
         
         this.loggedIn = true;
         
@@ -130,26 +148,26 @@ export default class FrontendAuthAPI {
      * 
      * It's not very helpful, because I can't access protected endpoints with the axios instance.
      */
-    async loginUser(): Promise<LoginResultType | undefined> {
+    async loginUser(userCredentials: LoginInputType): Promise<LoginResultType> {
         const endpoint = "/auth/login";
         if(this.debug) {
             const fullUrl = `${this.serverUrl}${endpoint}`;
             console.log(`Complete url: ${fullUrl}`);
         }
         
-        const res: AxiosResponse | undefined = await this.instance.post(endpoint, this.userData)
+        const res: AxiosResponse = await this.instance.post(endpoint, userCredentials)
             .then((res) => res)
             .catch((err) => {
                 console.error(err);
-                return undefined;
+                throw Error("Couldn't login the user");
             });
         
-        // Update logged in status
-        if(res) {
-            this.#updateLoggedIn(res);
-        }
+        const responseData: LoginResultType = res.data;
         
-        return res && res.data || undefined;
+        // Update logged in status
+        this.#updateLoggedIn(responseData);
+        
+        return res.data;
     }
     
     /**
@@ -157,27 +175,27 @@ export default class FrontendAuthAPI {
      * 
      * Use to login and get the jwt token directly
      */
-    async loginGetJwt(): Promise<LoginGetJwtResultType | undefined> {
+    async loginGetJwt(userCredentials: LoginInputType): Promise<LoginGetJwtResultType> {
         const endpoint = "/auth/login_get_jwt";
         if(this.debug) {
             const fullUrl = `${this.serverUrl}${endpoint}`;
             console.log(`Complete url: ${fullUrl}`);
         }
         
-        const res: AxiosResponse | undefined = await this.instance.post(endpoint, this.userData)
+        const res: AxiosResponse = await this.instance.post(endpoint, userCredentials)
             .then((res) => res)
             .catch((err) => {
                 console.log(`Couldn't get JWT token`);
                 console.error(err);
-                return undefined;
+                throw Error("Couldn't get JWT token")
             });
         
+        const responseData: LoginGetJwtResultType = res.data;
+        
         // Update logged in status
-        if(res) {
-            this.#updateLoggedIn(res);
-        }
+        this.#updateLoggedIn(responseData);
 
-        return res && res.data || undefined;
+        return res.data;
     }
     
     // --- Conversions ---

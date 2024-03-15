@@ -5,10 +5,10 @@ import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 import createAxiosInstance from "../../../createAxiosInstance";
 
 // Types
-import UserData from "../../../types/UserData";
 import CreateResultType from "../../../types/server/authentication/auth/password/CreateResultType";
 import DeleteResultType from "../../../types/server/authentication/user/DeleteResultType";
 import DataResultType from "../../../types/server/authentication/user/DataResultType";
+import CompleteUserData from "../../../types/CompleteUserData";
 
 /**
  * User API
@@ -19,7 +19,7 @@ export default class UserAPI {
     serverUrl: string = "";
     debug: boolean = false;
     instance: AxiosInstance;
-    userData: UserData = {};
+    #userData: CompleteUserData | undefined;
     
     /**
      * 
@@ -40,9 +40,24 @@ export default class UserAPI {
         const api = new UserAPI(debug);
         api.serverUrl = authApi.serverUrl;
         api.instance = authApi.instance;
-        api.userData = authApi.userData;
         
         return api;
+    }
+    
+    /**
+     * Use user data
+     */
+    async getUserData(): Promise<CompleteUserData> {
+        if(!this.#userData) {
+            const res = await this.data();
+            this.#userData = res.user;
+            
+            if(!this.#userData) {
+                throw Error("Couldn't fetch user data!");
+            }
+        }
+        
+        return this.#userData;
     }
     
     /**
@@ -68,6 +83,7 @@ export default class UserAPI {
     // --- User data ---
     /**
      * Get user data
+     * 
      */
     async data(): Promise<DataResultType> {
         const endpoint = "/user/data";
@@ -76,40 +92,41 @@ export default class UserAPI {
             console.log(`Complete url: ${fullUrl}`);
         }
         
-        const res = await this.instance.get(endpoint)
+        const res: AxiosResponse = await this.instance.get(endpoint)
             .then((res) => res)
             .catch((err) => {
                 console.error(err);
-                return;
+                throw Error("Couldn't fetch user data!");
             });
         
-        // Update data
-        if(res && res.data) {
-            this.userData = res.data;
+        const result: DataResultType = res.data;
+        
+        if(!this.#userData) {
+            this.#userData = result.user;
         }
         
-        return res && res.data || undefined;
+        return result;
     }
     
     // --- User operations ---
     /**
      * Delete user
      */
-    async delete(): Promise<DeleteResultType | undefined> {
+    async delete(): Promise<DeleteResultType> {
         const endpoint = "/user/delete";
         if(this.debug) {
             const fullUrl = `${this.serverUrl}${endpoint}`;
             console.log(`Complete url: ${fullUrl}`);
         }
         
-        const res: AxiosResponse | undefined = await this.instance.post(endpoint, this.userData)
+        const res: AxiosResponse = await this.instance.post(endpoint, this.#userData)
             .then((res) => res)
             .catch((err) => {
                 console.error(err);
-                return undefined;
+                throw Error("Couldn't delete the user");
             });
         
-        return res && res.data || undefined;
+        return res.data;
     }
     
     // --- Email ---
@@ -126,7 +143,7 @@ export default class UserAPI {
         token: string,
         password: string,
         confirmPassword: string
-    ): Promise<CreateResultType | undefined> {
+    ): Promise<CreateResultType> {
         // Endpoint
         const endpoint: string = `/user/password/create/${token}`;
         
@@ -136,7 +153,7 @@ export default class UserAPI {
             console.log(`Complete url: ${fullUrl}`);
         }
         
-        const res: AxiosResponse | undefined = await this.instance.post(endpoint, {
+        const res: AxiosResponse = await this.instance.post(endpoint, {
             password,
             confirmPassword
         })
@@ -145,9 +162,11 @@ export default class UserAPI {
             })
             .catch((err) => {
                 console.error(err);
-                return undefined;
+                throw Error("Couldn't create new password!");
             });
         
-        return res && res.data || undefined;
+        const responseData: CreateResultType = res.data;
+        
+        return responseData;
     }
 }

@@ -1,6 +1,5 @@
 import AuthAPI from "./FrontendAuthAPI";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
-import UserData from "../../types/UserData";
 import UserAPI from "./secure/UserAPI";
 
 /**
@@ -26,10 +25,9 @@ export default class ExpressAuthentication {
     /**
      * Create auth api
      * 
-     * @param {Object} userData 
      */
-    authApi(userData: UserData) {
-        const api = new AuthAPI(userData);
+    authApi() {
+        const api = new AuthAPI();
         
         return api;
     }
