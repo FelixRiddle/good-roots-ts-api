@@ -12,6 +12,8 @@ import UserAPI from "../../api/auth/secure/UserAPI";
 import UserData from "../../types/UserData";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
+import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
+import RegisterInputType from "../../types/server/authentication/auth/RegisterInputType";
 
 const AUTH_ACTION_LOGIN = 1;
 const AUTH_ACTION_REGISTER = 2;
@@ -98,20 +100,38 @@ export default class AuthMarkupController {
         // TODO: Frontend validation
         const userData: UserData = this.getFormData();
         
-        const api = new FrontendAuthAPI(userData, true);
+        const api = new FrontendAuthAPI(false);
         switch(this.authAction) {
             case AUTH_ACTION_LOGIN: {
-                const loginResult = await api.loginUser();
-                if(loginResult) {
-                    this.responseResults.push(loginResult);
+                if(!userData.email || !userData.password) {
+                    throw Error("Either password or email is undefined");
                 }
+                
+                // Log in
+                const loginInput: LoginInputType = {
+                    email: userData.email,
+                    password: userData.password,
+                };
+                const loginResult = await api.loginUser(loginInput);
+                
+                this.responseResults.push(loginResult);
                 break;
             }
             case AUTH_ACTION_REGISTER: {
-                const registerResult = await api.registerUser();
-                if(registerResult) {
-                    this.responseResults.push(registerResult);
+                if(!userData.email || !userData.password || !userData.name || !userData.confirmPassword) {
+                    throw Error("All fields are required");
                 }
+                
+                // Register
+                const registerInput: RegisterInputType = {
+                    name: userData.name,
+                    email: userData.email,
+                    password: userData.password,
+                    confirmPassword: userData.confirmPassword,
+                };
+                const registerResult = await api.registerUser(registerInput);
+                
+                this.responseResults.push(registerResult);
                 break;
             }
             case AUTH_ACTION_LOGOUT: {
