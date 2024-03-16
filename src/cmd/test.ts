@@ -1,11 +1,10 @@
-import { authApiDeleteTest, authApiFetchDataTest } from "../test/api/auth/authApiTest";
+import runAllTests from "../test";
 
 /**
  * Execute test
  */
 export default async function executeTests(args: any) {
     if(args.test) {
-        await authApiDeleteTest();
-        await authApiFetchDataTest();
+        await runAllTests();
     }
 }

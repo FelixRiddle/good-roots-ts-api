@@ -1,12 +1,10 @@
-// const chalk = import("chalk");
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 
 import ExpressAuthentication from "../../../api/auth/ExpressAuthentication";
-import UserData from "../../../types/UserData";
-import colors from "../../../colors";
 import RegisterInputType from "../../../types/server/authentication/auth/RegisterInputType";
 import LoginInputType from "../../../types/server/authentication/auth/LoginInputType";
+import { testMessage } from "../../testMessage";
 
 /**
  * Auth api test 1
@@ -44,12 +42,7 @@ export async function authApiDeleteTest() {
     const deleteRes = await userApi.delete();
     
     const userDeleted = deleteRes && deleteRes.userDeleted;
-    if(userDeleted) {
-        console.log(`Auth api delete user test...`, colors.fg.green, 'Ok', colors.fg.white);
-    } else {
-        // console.log(`Auth api delete user test... `, colors.fg.crimson, 'Error', colors.fg.white);
-        console.log(`Auth api delete user test...`, colors.fg.red, 'Error', colors.fg.white);
-    }
+    testMessage(userDeleted, `Auth api delete user test...`);
 }
 
 /**
@@ -92,9 +85,5 @@ export async function authApiFetchDataTest() {
     await userApi.delete();
 
     const userDataOk = userDataFetch && userDataFetch.user && userDataFetch.user.email;
-    if(userDataOk) {
-        console.log(`Auth API Fetch data test...`, colors.fg.green, 'Ok', colors.fg.white);
-    } else {
-        console.log(`Auth API Fetch data test...`, colors.fg.red, 'Error', colors.fg.white);
-    }
+    testMessage(userDataOk, `Auth API Fetch data test...`);
 }
