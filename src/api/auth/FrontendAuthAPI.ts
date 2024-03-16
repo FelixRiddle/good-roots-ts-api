@@ -118,7 +118,14 @@ export default class FrontendAuthAPI {
                 throw Error("Couldn't register the user");
             });
         
-        return res.data;
+        const registerResult: RegisterResultType = res.data;
+        
+        if(this.debug) {
+            console.log(`User registered`);
+            console.log(`Response: `, registerResult);
+        }
+        
+        return registerResult;
     }
     
     // --- Login ---
@@ -130,8 +137,8 @@ export default class FrontendAuthAPI {
      * @param {Object} res Axios response object
      */
     #updateLoggedIn(res: LoginResultType | LoginGetJwtResultType) {
-        if(res.token) {
-            throw Error("Couldn't login");
+        if(!res.token) {
+            return;
         }
         
         this.token = res.token;
@@ -191,6 +198,10 @@ export default class FrontendAuthAPI {
             });
         
         const responseData: LoginGetJwtResultType = res.data;
+        
+        if(this.debug) {
+            console.log(`Response: `, responseData);
+        }
         
         // Update logged in status
         this.#updateLoggedIn(responseData);

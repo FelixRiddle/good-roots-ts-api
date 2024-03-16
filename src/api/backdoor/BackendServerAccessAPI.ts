@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosResponse } from "axios";
-import axios from "axios";
 
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+import createAxiosInstance from "../../createAxiosInstance";
 
 export default class BackendServerAccessAPI {
     url: string;
@@ -9,7 +9,7 @@ export default class BackendServerAccessAPI {
     
     constructor() {
         this.url = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
-        this.setInstance();
+        this.instance = createAxiosInstance(this.url, '', '');
     }
     
     /**
@@ -19,7 +19,7 @@ export default class BackendServerAccessAPI {
      */
     setUrl(url: string) {
         this.url = url;
-        this.setInstance();
+        this.instance = createAxiosInstance(url, '', '');
         
         return this;
     }
@@ -69,23 +69,5 @@ export default class BackendServerAccessAPI {
         } else {
             return undefined;
         }
-    }
-    
-    /**
-     * Set axios instance
-     */
-    setInstance() {
-        // Create headers
-        let headers = {
-            "Content-Type": "application/json"
-        };
-        
-        this.instance = axios.create({
-            baseURL: this.url,
-            timeout: 2000,
-            headers,
-        });
-        
-        return this;
     }
 };
