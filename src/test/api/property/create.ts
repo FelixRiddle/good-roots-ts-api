@@ -16,7 +16,7 @@ export async function propertyApiCreateTest() {
     const createResult = await api.create(DEFAULT_PROPERTY);
     const deleteResults = await api.userDeleteAll();
     
-    testLib.deleteUser();
+    await testLib.deleteUser();
     
     const propertyCreated = createResult.propertyCreated;
     testMessage(propertyCreated, "Create property");
@@ -31,14 +31,14 @@ export async function propertyApiBadTitle() {
     // Get property api
     const api = testLib.propertyApi();
     
-    let propertyData: CreateUserPropertyInputType = DEFAULT_PROPERTY;
+    let propertyData: CreateUserPropertyInputType = JSON.parse(JSON.stringify(DEFAULT_PROPERTY));
     propertyData.title = "a";
     
     // Create some property
     const createResult = await api.create(propertyData);
     const deleteResults = await api.userDeleteAll();
     
-    testLib.deleteUser();
+    await testLib.deleteUser();
     
     // We will test that it's false
     const propertyCreated = !createResult.propertyCreated;

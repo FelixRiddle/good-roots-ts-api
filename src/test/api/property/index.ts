@@ -1,4 +1,5 @@
 import { propertyApiBadTitle, propertyApiCreateTest } from "./create";
+import { propertyApiDeleteTest } from "./delete";
 
 /**
  * Property tests
@@ -6,4 +7,5 @@ import { propertyApiBadTitle, propertyApiCreateTest } from "./create";
 export default async function runAllPropertyTests() {
     await propertyApiCreateTest();
     await propertyApiBadTitle();
+    await propertyApiDeleteTest();
 }
