@@ -16,8 +16,8 @@ export default class PropertyAPI {
      * Property api
      * 
      */
-    constructor() {
-        this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.GOOD_ROOTS, "property");
+    constructor(token: string) {
+        this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.GOOD_ROOTS, "property", token);
     }
     
     /**
@@ -35,6 +35,7 @@ export default class PropertyAPI {
             })
             .catch((err) => {
                 console.error(err);
+                throw Error("Couldn't fetch the properties");
             });
         
         return res;

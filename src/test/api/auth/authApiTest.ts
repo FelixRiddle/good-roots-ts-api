@@ -42,7 +42,7 @@ export async function authApiDeleteTest() {
     const deleteRes = await userApi.delete();
     
     const userDeleted = deleteRes && deleteRes.userDeleted;
-    testMessage(userDeleted, `Auth api delete user test...`);
+    testMessage(userDeleted, `Auth api delete user test`);
 }
 
 /**
@@ -85,5 +85,5 @@ export async function authApiFetchDataTest() {
     await userApi.delete();
 
     const userDataOk = userDataFetch && userDataFetch.user && userDataFetch.user.email;
-    testMessage(userDataOk, `Auth API Fetch data test...`);
+    testMessage(userDataOk, `Auth API Fetch data test`);
 }

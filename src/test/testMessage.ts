@@ -9,9 +9,10 @@ import colors from "../colors";
  * @param testName 
  */
 export function testMessage(expression: any, testName: string) {
+    const message = `${testName}...`;
     if(expression) {
-        console.log(testName, colors.fg.green, 'Ok', colors.fg.white);
+        console.log(message, colors.fg.green, 'Ok', colors.fg.white);
     } else {
-        console.log(testName, colors.fg.red, 'Error', colors.fg.white);
+        console.log(message, colors.fg.red, 'Error', colors.fg.white);
     }
 }
