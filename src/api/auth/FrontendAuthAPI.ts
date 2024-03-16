@@ -1,7 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
 import UserAPI from "../user/UserAPI";
-import UserData from "../../types/UserData";
 import createAxiosInstance from "../../createAxiosInstance";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import BackendServerAccessAPI from "../backdoor/BackendServerAccessAPI";
@@ -10,11 +9,12 @@ import BackendServerAccessAPI from "../backdoor/BackendServerAccessAPI";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import LoginGetJwtResultType from "../../types/server/authentication/auth/LoginGetJwtResultType";
-import CompleteUserData from "../../types/CompleteUserData";
 import RegisterInputType from "../../types/server/authentication/auth/RegisterInputType";
 import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
 import BackdoorConfirmEmailInputType from "../../types/server/authentication/auth/BackdoorConfirmEmailInputType";
 import BackdoorConfirmEmailResultType from "../../types/server/authentication/auth/BackdoorConfirmEmailResultType";
+import PropertyAPI from "../user/property/PropertyAPI";
+import PublicPropertyAPI from "../property/PropertyAPI";
 
 /**
  * Auth API
@@ -209,7 +209,7 @@ export default class FrontendAuthAPI {
         return res.data;
     }
     
-    // --- Conversions ---
+    // --- Api Conversions ---
     /**
      * User API
      * 
@@ -219,5 +219,27 @@ export default class FrontendAuthAPI {
         const api = UserAPI.fromAuthenticatedAPI(this);
         
         return api;
+    }
+    
+    /**
+     * Property API
+     * 
+     * WARNING: Will throw an error if the user is not authenticated
+     */
+    propertyApi() {
+        if(!this.token) {
+            throw Error("Can't convert to a secure api because the user is not logged in");
+        }
+        
+        return new PropertyAPI(this.token);
+    }
+    
+    /**
+     * Public property api
+     * 
+     * Doesn't require authentication
+     */
+    publicPropertyApi() {
+        return new PublicPropertyAPI();
     }
 }

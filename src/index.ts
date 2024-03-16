@@ -17,7 +17,7 @@ import UserData from "./types/UserData";
 import PropertyType from "./types/server/property/PropertyType";
 import PropertyCompleteType from "./types/server/property/PropertyCompleteType";
 import CompleteUserData from "./types/CompleteUserData";
-import MyPropertiesPageResultType from "./types/server/property/MyPropertiesPageResultType";
+import MyPropertiesPageResultType from "./types/server/user/property/MyPropertiesPageResultType";
 
 export default {
     // Api's

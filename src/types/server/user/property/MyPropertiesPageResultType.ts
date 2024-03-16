@@ -1,5 +1,5 @@
-import Status from "../../Status";
-import PropertyCompleteType from "./PropertyCompleteType";
+import Status from "../../../Status";
+import PropertyCompleteType from "../../property/PropertyCompleteType";
 
 export default interface MyPropertiesPageResultType {
     properties: Array<PropertyCompleteType>,

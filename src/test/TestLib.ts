@@ -60,4 +60,10 @@ export default class TestLib {
     }
     
     // --- APIS ---
+    /**
+     * Property api
+     */
+    propertyApi() {
+        return this.api.propertyApi();
+    }
 }

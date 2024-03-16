@@ -16,7 +16,7 @@ export default class PropertyAPI {
      * Property api
      * 
      */
-    constructor(token: string) {
+    constructor(token: string = '') {
         this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.GOOD_ROOTS, "property", token);
     }
     
