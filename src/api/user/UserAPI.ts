@@ -30,8 +30,8 @@ export default class UserAPI {
     constructor(instance: AxiosInstance, token: string, debug=false) {
         this.token = token;
         this.debug = debug;
-
-        this.instance = createAxiosInstance(SERVER_URL_MAPPINGS.AUTHENTICATION);
+        
+        this.instance = instance;
     }
     
     // --- Constructors ---
@@ -70,7 +70,7 @@ export default class UserAPI {
      */
     static async fromJWT(token: string, debug=false) {
         const url = SERVER_URL_MAPPINGS.AUTHENTICATION;
-        const instance = createAxiosInstance(url, "", token);
+        const instance = createAxiosInstance(url, '', token);
         const api = new UserAPI(instance, token, debug);
         
         return api;
