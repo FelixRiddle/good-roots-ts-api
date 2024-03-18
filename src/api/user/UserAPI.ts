@@ -6,10 +6,10 @@ import createAxiosInstance from "../../createAxiosInstance";
 
 // Types
 import CreateResultType from "../../types/server/authentication/auth/password/CreateResultType";
-import DeleteResultType from "../../types/server/authentication/user/DeleteResultType";
 import DataResultType from "../../types/server/authentication/user/DataResultType";
 import CompleteUserData from "../../types/CompleteUserData";
 import PropertyAPI from "./property/PropertyAPI";
+import DeleteUserResultType from "../../types/server/user/DeleteUserResultType";
 
 /**
  * User API
@@ -108,11 +108,21 @@ export default class UserAPI {
     /**
      * Delete user
      */
-    async delete(): Promise<DeleteResultType> {
+    async delete(): Promise<DeleteUserResultType> {
         const endpoint = "/user/delete";
         if(this.debug) {
             const fullUrl = `${this.serverUrl}${endpoint}`;
             console.log(`Complete url: ${fullUrl}`);
+        }
+        
+        if(!this.#userData) {
+            // Try to fetch data first
+            await this.data();
+            
+            // This can't be
+            if(!this.#userData) {
+                throw Error("There's no user data!");
+            }
         }
         
         const res: AxiosResponse = await this.instance.post(endpoint, this.#userData)

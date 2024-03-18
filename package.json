@@ -16,6 +16,10 @@
   "files": [
     "dist"
   ],
+  "scripts": {
+    "test": "ts-node src/cmd/index.ts --test",
+    "build": "tsup"
+  },
   "dependencies": {
     "@types/argparse": "^2.0.14",
     "argparse": "^2.0.1",
@@ -24,10 +28,6 @@
     "felixriddle.checkpoint": "^2.0.3",
     "generate-password": "^1.7.1",
     "uuid": "^9.0.1"
-  },
-  "scripts": {
-    "test": "ts-node src/cmd/index.ts --test",
-    "build": "tsup"
   },
   "keywords": [],
   "author": "",
