@@ -8,13 +8,12 @@ import FrontendAuthAPI from "../../api/auth/FrontendAuthAPI";
 // Because these are backend subdomain it's not really important what name they have
 // just that they point to the exact location.
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
-import UserAPI from "../../api/user/UserAPI";
 import UserData from "../../types/UserData";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
 import RegisterInputType from "../../types/server/authentication/auth/RegisterInputType";
-import DeleteResultType from "../../types/server/authentication/user/DeleteResultType";
+import DeleteUserResultType from "../../types/server/user/DeleteUserResultType";
 
 const AUTH_ACTION_LOGIN = 1;
 const AUTH_ACTION_REGISTER = 2;
@@ -22,7 +21,7 @@ const AUTH_ACTION_LOGOUT = 3;
 const AUTH_ACTION_DELETE = 4;
 
 export type FieldTypes = "name" | "email" | "password" | "confirmPassword";
-export type ResponseResults = LoginResultType | RegisterResultType | DeleteResultType;
+export type ResponseResults = LoginResultType | RegisterResultType | DeleteUserResultType;
 
 /**
  * Auth markup controller
