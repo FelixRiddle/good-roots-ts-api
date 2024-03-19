@@ -1,8 +1,10 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
+import ConfMap from "felixriddle.configuration-mappings";
+
 import UserAPI from "../user/UserAPI";
 import createAxiosInstance from "../../createAxiosInstance";
-import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+// import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import BackendServerAccessAPI from "../backdoor/BackendServerAccessAPI";
 
 // Types
@@ -36,7 +38,8 @@ export default class FrontendAuthAPI {
         this.debug = debug;
         
         // Set server url
-        this.serverUrl = SERVER_URL_MAPPINGS.AUTHENTICATION;
+        // this.serverUrl = SERVER_URL_MAPPINGS.AUTHENTICATION;
+        this.serverUrl = ConfMap.LocationSelection.expressAuthentication();
         if(this.debug) {
             console.log(`Server url: ${this.debug}`);
         }
@@ -72,7 +75,8 @@ export default class FrontendAuthAPI {
      */
     async confirmUserEmailWithPrivateKey(email: string): Promise<BackdoorConfirmEmailResultType> {
         // TODO: Available on the same server
-        const backdoorServerUrl = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
+        // const backdoorServerUrl = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
+        const backdoorServerUrl = ConfMap.LocationSelection.backdoorServerAccess();
         if(!backdoorServerUrl) {
             throw Error("You have to set 'BACKDOOR_SERVER_ACCESS_URL'")
         };
@@ -93,7 +97,9 @@ export default class FrontendAuthAPI {
         const res: AxiosResponse = await this.instance.post("/auth/email", body)
             .then((res) => res)
             .catch(err => {
-                console.error(err);
+                if(this.debug) {
+                    console.error(err);
+                }
                 throw Error("Couldn't fetch user data!");
             });
         
@@ -114,7 +120,10 @@ export default class FrontendAuthAPI {
         const res: AxiosResponse = await this.instance.post(endpoint, userData)
             .then((res) => res)
             .catch((err) => {
-                console.error(err);
+                if(this.debug) {
+                    console.error(err);
+                }
+                // console.error(err);
                 throw Error("Couldn't register the user");
             });
         
@@ -165,7 +174,9 @@ export default class FrontendAuthAPI {
         const res: AxiosResponse = await this.instance.post(endpoint, userCredentials)
             .then((res) => res)
             .catch((err) => {
-                console.error(err);
+                if(this.debug) {
+                    console.error(err);
+                }
                 throw Error("Couldn't login the user");
             });
         
@@ -192,8 +203,10 @@ export default class FrontendAuthAPI {
         const res: AxiosResponse = await this.instance.post(endpoint, userCredentials)
             .then((res) => res)
             .catch((err) => {
-                console.log(`Couldn't get JWT token`);
-                console.error(err);
+                if(this.debug) {
+                    console.log(`Couldn't get JWT token`);
+                    console.error(err);
+                }
                 throw Error("Couldn't get JWT token")
             });
         

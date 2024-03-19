@@ -1,25 +1,31 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
+import ConfMap from "felixriddle.configuration-mappings";
+
 import FrontendAuthAPI from "../FrontendAuthAPI";
 import BackendServerAccessAPI from "../../backdoor/BackendServerAccessAPI";
-import UserData from "../../../types/UserData";
-import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
+// import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 
 import SendResetEmailResultType from "../../../types/server/authentication/auth/password/SendResetEmailResultType";
+import DataResultType from "../../../types/server/authentication/user/DataResultType";
+import CompleteUserData from "../../../types/CompleteUserData";
 
 /**
  * Non authenticated reset password API
  */
 export default class ResetPasswordAPI {
-    userData: UserData;
+    userData: CompleteUserData;
     instance: AxiosInstance;
     backdoorServerUrl: string;
     
     /**
      * @param {object} userData User data
      */
-    constructor(userData: UserData) {
+    constructor(userData: CompleteUserData) {
         this.userData = userData;
+        
+        const url = ConfMap.LocationSelection.expressAuthentication();
+        this.backdoorServerUrl = ConfMap.LocationSelection.backdoorServerAccess();
         
         // Headers
         let headers = {
@@ -27,7 +33,7 @@ export default class ResetPasswordAPI {
         };
         this.instance = axios.create({
             withCredentials: true,
-            baseURL: SERVER_URL_MAPPINGS.AUTHENTICATION,
+            baseURL: url,
             timeout: 2000,
             headers,
         });
@@ -36,14 +42,14 @@ export default class ResetPasswordAPI {
     /**
      * Set backdoor server url
      */
-    setBackdoorServerUrl(url) {
+    setBackdoorServerUrl(url: string) {
         this.backdoorServerUrl = url;
     }
     
     /**
      * Set axios instance
      */
-    setAxiosInstance(instance) {
+    setAxiosInstance(instance: AxiosInstance) {
         this.instance = instance;
     }
     
@@ -52,8 +58,14 @@ export default class ResetPasswordAPI {
      * 
      * @param {AuthAPI} authAPI 
      */
-    static fromAuthenticatedAPI(authAPI: FrontendAuthAPI): ResetPasswordAPI {
-        const resetAPI = new ResetPasswordAPI(authAPI.userData);
+    static async fromAuthenticatedAPI(authAPI: FrontendAuthAPI): Promise<ResetPasswordAPI> {
+        const res: DataResultType = await authAPI.userApi().data();
+        const userData = res.user;
+        if(!userData) {
+            throw Error("Couldn't fetch user data");
+        }
+        
+        const resetAPI = new ResetPasswordAPI(userData);
         
         // Set the authenticated instance
         resetAPI.setAxiosInstance(authAPI.instance);

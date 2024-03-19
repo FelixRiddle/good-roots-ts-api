@@ -1,7 +1,9 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
+import ConfMap from "felixriddle.configuration-mappings";
+
 import createAxiosInstance from "../../../createAxiosInstance";
-import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
+// import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 import MyPropertiesPageResultType from "../../../types/server/user/property/MyPropertiesPageResultType";
 import CreateUserPropertyInputType from "../../../types/server/user/property/CreateUserPropertyInputType";
 import CreateUserPropertyResultType from "../../../types/server/user/property/CreateUserPropertyResultType";
@@ -17,8 +19,10 @@ export default class PropertyAPI {
     constructor(token: string, debug=false) {
         this.debug = debug;
         
-        // Url
-        const url = SERVER_URL_MAPPINGS.REAL_ESTATE;
+        const url = ConfMap.LocationSelection.realEstate();
+        
+        // // Url
+        // const url = SERVER_URL_MAPPINGS.REAL_ESTATE;
         
         // Create instance
         this.instance = createAxiosInstance(url, "", token);

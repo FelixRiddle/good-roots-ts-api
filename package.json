@@ -26,6 +26,7 @@
     "axios": "^1.6.7",
     "dotenv": "^16.4.5",
     "felixriddle.checkpoint": "^2.0.3",
+    "felixriddle.configuration-mappings": "^1.0.4",
     "generate-password": "^1.7.1",
     "uuid": "^9.0.1"
   },

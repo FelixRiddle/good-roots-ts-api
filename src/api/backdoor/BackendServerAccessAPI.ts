@@ -1,6 +1,8 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+import ConfMap from "felixriddle.configuration-mappings";
+
+// import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import createAxiosInstance from "../../createAxiosInstance";
 
 export default class BackendServerAccessAPI {
@@ -8,7 +10,8 @@ export default class BackendServerAccessAPI {
     instance: AxiosInstance;
     
     constructor() {
-        this.url = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
+        // this.url = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
+        this.url = ConfMap.LocationSelection.backdoorServerAccess();
         this.instance = createAxiosInstance(this.url, '', '');
     }
     
