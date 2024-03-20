@@ -5,7 +5,11 @@
  */
 interface Status {
     error: boolean,
-    message: string
+    message: string,
+    // If it was an input field, then this is guaranteed
+    field?: string,
+    // Some messages should be notified, others not
+    shouldNotify?: boolean,
 }
 
 export default Status;

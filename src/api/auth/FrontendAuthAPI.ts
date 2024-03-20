@@ -4,7 +4,6 @@ import ConfMap from "felixriddle.configuration-mappings";
 
 import UserAPI from "../user/UserAPI";
 import createAxiosInstance from "../../createAxiosInstance";
-// import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import BackendServerAccessAPI from "../backdoor/BackendServerAccessAPI";
 
 // Types
