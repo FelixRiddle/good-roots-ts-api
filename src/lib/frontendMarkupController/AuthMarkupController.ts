@@ -8,20 +8,18 @@ import FrontendAuthAPI from "../../api/auth/FrontendAuthAPI";
 // Because these are backend subdomain it's not really important what name they have
 // just that they point to the exact location.
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
-// import UserData from "../../types/UserData";
-import CompleteUserData from "../../types/CompleteUserData";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
 import RegisterInputType from "../../types/server/authentication/auth/RegisterInputType";
 import DeleteUserResultType from "../../types/server/user/DeleteUserResultType";
+import FieldType from "../../types/input/FieldType";
 
 const AUTH_ACTION_LOGIN = 1;
 const AUTH_ACTION_REGISTER = 2;
 const AUTH_ACTION_LOGOUT = 3;
 const AUTH_ACTION_DELETE = 4;
 
-export type FieldTypes = "name" | "email" | "password" | "confirmPassword";
 export type ResponseResults = LoginResultType | RegisterResultType | DeleteUserResultType;
 
 /**
@@ -41,7 +39,7 @@ export type ResponseResults = LoginResultType | RegisterResultType | DeleteUserR
  * The id is the same name of the field in the object data
  */
 export default class AuthMarkupController {
-    formFieldsId: Array<FieldTypes> = [];
+    formFieldsId: Array<FieldType> = [];
     formAction: number = 0;
     authAction: number = 0;
     responseResults: Array<ResponseResults> = [];
@@ -54,7 +52,7 @@ export default class AuthMarkupController {
      * Append form field id
      * 
      */
-    appendFormFieldId(id: FieldTypes) {
+    appendFormFieldId(id: FieldType) {
         this.formFieldsId.push(id);
         
         return this;

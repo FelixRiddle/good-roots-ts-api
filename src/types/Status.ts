@@ -1,3 +1,5 @@
+import FieldType from "./input/FieldType";
+
 /**
  * Status is the response from my endpoints
  * 
@@ -7,7 +9,7 @@ interface Status {
     error: boolean,
     message: string,
     // If it was an input field, then this is guaranteed
-    field?: string,
+    field?: FieldType,
     // Some messages should be notified, others not
     shouldNotify?: boolean,
 }
