@@ -8,7 +8,8 @@ import FrontendAuthAPI from "../../api/auth/FrontendAuthAPI";
 // Because these are backend subdomain it's not really important what name they have
 // just that they point to the exact location.
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
-import UserData from "../../types/UserData";
+// import UserData from "../../types/UserData";
+import CompleteUserData from "../../types/CompleteUserData";
 import LoginResultType from "../../types/server/authentication/auth/LoginResultType";
 import RegisterResultType from "../../types/server/authentication/auth/RegisterResultType";
 import LoginInputType from "../../types/server/authentication/auth/LoginInputType";
@@ -68,10 +69,12 @@ export default class AuthMarkupController {
      * 
      * @returns {Object}
      */
-    getFormData(): UserData {
-        const resultObject: UserData = {
+    getFormData(): RegisterInputType {
+        const resultObject: RegisterInputType = {
             email: "",
             password: "",
+            confirmPassword: "",
+            name: "",
         };
         
         for(const fieldId of this.formFieldsId) {
@@ -98,7 +101,7 @@ export default class AuthMarkupController {
      */
     async executeAuthAction(): Promise<AuthMarkupController> {
         // TODO: Frontend validation
-        const userData: UserData = this.getFormData();
+        const userData: RegisterInputType = this.getFormData();
         
         const api = new FrontendAuthAPI(false);
         switch(this.authAction) {

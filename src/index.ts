@@ -13,12 +13,12 @@ import CarouselView from "./lib/property/views/CarouselView";
 // Types
 import RegisterInputType from "./types/server/authentication/auth/RegisterInputType";
 import { FieldTypes } from "./lib/frontendMarkupController/AuthMarkupController";
-import UserData from "./types/UserData";
 import PropertyType from "./types/server/property/PropertyType";
 import PropertyCompleteType from "./types/server/property/PropertyCompleteType";
 import CompleteUserData from "./types/CompleteUserData";
 import MyPropertiesPageResultType from "./types/server/user/property/MyPropertiesPageResultType";
 import Status from "./types/Status";
+import FormStatusType from "./types/status/FieldStatusType";
 
 export default {
     // Api's
@@ -39,10 +39,10 @@ export default {
 export type {
     // Data
     FieldTypes,
+    FormStatusType,
     RegisterInputType,
     
     CompleteUserData,
-    UserData,
     MyPropertiesPageResultType,
     
     PropertyCompleteType,
