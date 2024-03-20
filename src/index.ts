@@ -18,7 +18,7 @@ import PropertyCompleteType from "./types/server/property/PropertyCompleteType";
 import CompleteUserData from "./types/CompleteUserData";
 import MyPropertiesPageResultType from "./types/server/user/property/MyPropertiesPageResultType";
 import Status from "./types/Status";
-import FormStatusType from "./types/status/FieldStatusType";
+import FieldStatusType from "./types/status/FieldStatusType";
 
 export default {
     // Api's
@@ -39,7 +39,7 @@ export default {
 export type {
     // Data
     FieldTypes,
-    FormStatusType,
+    FieldStatusType,
     RegisterInputType,
     
     CompleteUserData,
