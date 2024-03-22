@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import ConfMap from "felixriddle.configuration-mappings";
+import { LocationSelection } from "felixriddle.configuration-mappings";
 
 import UserAPI from "../user/UserAPI";
 import createAxiosInstance from "../../createAxiosInstance";
@@ -33,12 +33,11 @@ export default class FrontendAuthAPI {
      * User data
      * 
      */
-    constructor(debug=false) {
+    constructor(debug: boolean = false) {
         this.debug = debug;
         
         // Set server url
-        // this.serverUrl = SERVER_URL_MAPPINGS.AUTHENTICATION;
-        this.serverUrl = ConfMap.LocationSelection.expressAuthentication();
+        this.serverUrl = LocationSelection.expressAuthentication();
         if(this.debug) {
             console.log(`Server url: ${this.debug}`);
         }
@@ -75,7 +74,7 @@ export default class FrontendAuthAPI {
     async confirmUserEmailWithPrivateKey(email: string): Promise<BackdoorConfirmEmailResultType> {
         // TODO: Available on the same server
         // const backdoorServerUrl = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
-        const backdoorServerUrl = ConfMap.LocationSelection.backdoorServerAccess();
+        const backdoorServerUrl = LocationSelection.backdoorServerAccess();
         if(!backdoorServerUrl) {
             throw Error("You have to set 'BACKDOOR_SERVER_ACCESS_URL'")
         };

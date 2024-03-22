@@ -1,10 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
-import ConfMap from "felixriddle.configuration-mappings";
+import { LocationSelection } from "felixriddle.configuration-mappings";
 
 import FrontendAuthAPI from "../FrontendAuthAPI";
 import BackendServerAccessAPI from "../../backdoor/BackendServerAccessAPI";
-// import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 
 import SendResetEmailResultType from "../../../types/server/authentication/auth/password/SendResetEmailResultType";
 import DataResultType from "../../../types/server/authentication/user/DataResultType";
@@ -24,8 +23,8 @@ export default class ResetPasswordAPI {
     constructor(userData: CompleteUserData) {
         this.userData = userData;
         
-        const url = ConfMap.LocationSelection.expressAuthentication();
-        this.backdoorServerUrl = ConfMap.LocationSelection.backdoorServerAccess();
+        const url = LocationSelection.expressAuthentication();
+        this.backdoorServerUrl = LocationSelection.backdoorServerAccess();
         
         // Headers
         let headers = {

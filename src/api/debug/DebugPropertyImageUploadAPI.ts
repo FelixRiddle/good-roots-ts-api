@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 
 import DebugPropertyImageUploadType from "../../types/server/debug/DebugPropertyImageUpload";
 import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";

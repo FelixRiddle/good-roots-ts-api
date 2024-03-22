@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import ConfMap from "felixriddle.configuration-mappings";
+import { LocationSelection } from "felixriddle.configuration-mappings";
 
 import FrontendAuthAPI from "../auth/FrontendAuthAPI";
 // import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
@@ -71,7 +71,7 @@ export default class UserAPI {
      * 
      */
     static async fromJWT(token: string, debug=false) {
-        const url = ConfMap.LocationSelection.expressAuthentication();
+        const url = LocationSelection.expressAuthentication();
         
         const instance = createAxiosInstance(url, '', token);
         const api = new UserAPI(instance, token, debug);

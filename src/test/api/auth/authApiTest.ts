@@ -11,6 +11,7 @@ import { testMessage } from "../../testMessage";
  * 
  */
 export async function authApiDeleteTest() {
+    const debug = false;
     let result = false;
     try {
         // Setup dotenv
@@ -31,14 +32,14 @@ export async function authApiDeleteTest() {
         };
         
         // Create general manager
-        const expressAuth = new ExpressAuthentication();
+        const expressAuth = new ExpressAuthentication(debug);
         
         // Auth api
         const api = expressAuth.authApi();
         await api.registerUser(userData);
         await api.confirmUserEmailWithPrivateKey(loginInput.email);
         await api.loginGetJwt(loginInput);
-
+        
         // User api
         const userApi = api.userApi();
         const deleteRes = await userApi.delete();
@@ -47,6 +48,9 @@ export async function authApiDeleteTest() {
         result = userDeleted;
     } catch(err) {
         // Do nothing, we just don't want to stop code from running
+        if(debug) {
+            console.error(err);
+        }
     }
     testMessage(result, `Auth api delete user test`);
 }

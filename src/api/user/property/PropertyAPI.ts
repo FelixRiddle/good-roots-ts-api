@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import ConfMap from "felixriddle.configuration-mappings";
+import { LocationSelection } from "felixriddle.configuration-mappings";
 
 import createAxiosInstance from "../../../createAxiosInstance";
 // import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
@@ -19,7 +19,7 @@ export default class PropertyAPI {
     constructor(token: string, debug=false) {
         this.debug = debug;
         
-        const url = ConfMap.LocationSelection.realEstate();
+        const url = LocationSelection.realEstate();
         
         // // Url
         // const url = SERVER_URL_MAPPINGS.REAL_ESTATE;
