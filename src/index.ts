@@ -20,7 +20,7 @@ import Status from "./types/Status";
 import FieldStatusType from "./types/status/FieldStatusType";
 import FieldType from "./types/input/FieldType";
 
-export {
+export default {
     // Api's
     ExpressAuthentication,
     FrontendAuthAPI,
