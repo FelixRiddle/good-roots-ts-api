@@ -1,8 +1,9 @@
 import AuthMarkupController from "./lib/frontendMarkupController/AuthMarkupController";
 import ExpressAuthentication from "./api/auth/ExpressAuthentication";
 import FrontendAuthAPI from "./api/auth/FrontendAuthAPI";
+import PropertyAPI from "./api/property/PropertyAPI";
 import SERVER_URL_MAPPINGS from "./mappings/env/SERVER_URL_MAPPINGS";
-
+import UserAPI from "./api/user/UserAPI";
 
 // Images
 import ImagesAPI from "./lib/property/images/ImagesAPI";
@@ -24,6 +25,8 @@ export {
     // Api's
     ExpressAuthentication,
     FrontendAuthAPI,
+    PropertyAPI,
+    UserAPI,
     
     CarouselView,
     ImagesAPI,
