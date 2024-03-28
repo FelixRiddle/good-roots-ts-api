@@ -20,7 +20,9 @@ export default class ExpressAuthentication {
         if(this.debug) {
             console.log(`Create FrontendAuthAPI`);
         }
-        const api = new AuthAPI(this.debug);
+        const api = new AuthAPI({
+            debug: this.debug,
+        });
         
         return api;
     }

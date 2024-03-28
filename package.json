@@ -1,6 +1,6 @@
 {
   "name": "felixriddle.good-roots-ts-api",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "devDependencies": {
     "@types/uuid": "^9.0.8",
     "ts-node": "^10.9.2",

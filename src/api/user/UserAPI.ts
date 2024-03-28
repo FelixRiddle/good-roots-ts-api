@@ -1,9 +1,8 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import { LocationSelection } from "felixriddle.configuration-mappings";
+import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
 
 import FrontendAuthAPI from "../auth/FrontendAuthAPI";
-// import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import createAxiosInstance from "../../createAxiosInstance";
 
 // Types
@@ -12,6 +11,11 @@ import DataResultType from "../../types/server/authentication/user/DataResultTyp
 import CompleteUserData from "../../types/CompleteUserData";
 import PropertyAPI from "./property/PropertyAPI";
 import DeleteUserResultType from "../../types/server/user/DeleteUserResultType";
+
+export interface UserAPIOptions {
+    debug: boolean,
+    serverBaseUrl?: string
+}
 
 /**
  * User API
@@ -29,9 +33,11 @@ export default class UserAPI {
      * 
      * @param debug 
      */
-    constructor(instance: AxiosInstance, token: string, debug=false) {
+    constructor(instance: AxiosInstance, token: string, options: UserAPIOptions = {
+        debug: false,
+    }) {
         this.token = token;
-        this.debug = debug;
+        this.debug = options.debug;
         
         this.instance = instance;
     }
@@ -41,10 +47,12 @@ export default class UserAPI {
     /**
      * 
      */
-    static fromAuthenticatedAPI(authApi: FrontendAuthAPI, debug=false) {
+    static fromAuthenticatedAPI(authApi: FrontendAuthAPI, options: UserAPIOptions = {
+        debug: false,
+    }) {
         if(!authApi.token) throw Error("Token not found on AuthenticationAPI");
         
-        const api = new UserAPI(authApi.instance, authApi.token, debug);
+        const api = new UserAPI(authApi.instance, authApi.token, options);
         api.serverUrl = authApi.serverUrl;
         
         return api;
@@ -70,11 +78,19 @@ export default class UserAPI {
      * Create UserAPI instance from a jwt token
      * 
      */
-    static async fromJWT(token: string, debug=false) {
-        const url = LocationSelection.expressAuthentication();
+    static async fromJWT(token: string, options: UserAPIOptions = {
+        debug: false,
+    }) {
+        // Set server url
+        let url = "";
+        if(!options.serverBaseUrl) {
+            url = SERVERS_DEFAULT_LOCATION['express-authentication'];
+        } else {
+            url = options.serverBaseUrl;
+        }
         
         const instance = createAxiosInstance(url, '', token);
-        const api = new UserAPI(instance, token, debug);
+        const api = new UserAPI(instance, token, options);
         
         return api;
     }

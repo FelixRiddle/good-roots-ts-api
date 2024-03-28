@@ -101,7 +101,7 @@ export default class AuthMarkupController {
         // TODO: Frontend validation
         const userData: RegisterInputType = this.getFormData();
         
-        const api = new FrontendAuthAPI(false);
+        const api = new FrontendAuthAPI();
         switch(this.authAction) {
             case AUTH_ACTION_LOGIN: {
                 if(!userData.email || !userData.password) {

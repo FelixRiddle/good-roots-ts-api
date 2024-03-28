@@ -2,6 +2,12 @@
 
 Frontend good roots apis
 
+# Rules
+
+- Don't use nodejs only modules
+
+This API is supposed to work on the frontend too.
+
 # Testing
 
 Remember to run servers before testing

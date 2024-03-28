@@ -1,9 +1,14 @@
 import { AxiosInstance } from "axios";
 
-import { LocationSelection } from "felixriddle.configuration-mappings";
+import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
 
 import createAxiosInstance from "../../createAxiosInstance";
-// import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
+
+export interface PropertyAPIOptions {
+    debug: boolean,
+    serverBaseUrl?: string,
+    token: string,
+}
 
 /**
  * Public property api
@@ -12,17 +17,25 @@ import createAxiosInstance from "../../createAxiosInstance";
  */
 export default class PropertyAPI {
     debug = false;
-    
     instance: AxiosInstance;
+    url: string;
     
     /**
      * Property api
      * 
      */
-    constructor(token: string = '') {
-        const url = LocationSelection.realEstate();
+    constructor(options: PropertyAPIOptions = {
+        debug: false,
+        token: ''
+    }) {
+        // Set server url
+        if(!options.serverBaseUrl) {
+            this.url = SERVERS_DEFAULT_LOCATION['express-real-estate'];
+        } else {
+            this.url = options.serverBaseUrl;
+        }
         
-        this.instance = createAxiosInstance(url, "property", token);
+        this.instance = createAxiosInstance(this.url, "property", options.token);
     }
     
     /**

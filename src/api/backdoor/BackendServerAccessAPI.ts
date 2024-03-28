@@ -1,17 +1,32 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import { LocationSelection } from "felixriddle.configuration-mappings";
+import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
 
 // import SERVER_URL_MAPPINGS from "../../mappings/env/SERVER_URL_MAPPINGS";
 import createAxiosInstance from "../../createAxiosInstance";
 
+export interface BackendServerAccessAPIOptions {
+    debug: boolean,
+    serverBaseUrl?: string,
+}
+
+/**
+ * Backend server access api
+ */
 export default class BackendServerAccessAPI {
     url: string;
     instance: AxiosInstance;
     
-    constructor() {
-        // this.url = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
-        this.url = LocationSelection.backdoorServerAccess();
+    constructor(options: BackendServerAccessAPIOptions = {
+        debug: false,
+    }) {
+        // Set server url
+        if(!options.serverBaseUrl) {
+            this.url = SERVERS_DEFAULT_LOCATION['backdoor-server-access'];
+        } else {
+            this.url = options.serverBaseUrl;
+        }
+        
         this.instance = createAxiosInstance(this.url, '', '');
     }
     

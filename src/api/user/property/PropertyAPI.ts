@@ -1,13 +1,17 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import { LocationSelection } from "felixriddle.configuration-mappings";
+import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
 
 import createAxiosInstance from "../../../createAxiosInstance";
-// import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 import MyPropertiesPageResultType from "../../../types/server/user/property/MyPropertiesPageResultType";
 import CreateUserPropertyInputType from "../../../types/server/user/property/CreateUserPropertyInputType";
 import CreateUserPropertyResultType from "../../../types/server/user/property/CreateUserPropertyResultType";
 import DeleteUserPropertyResultType from "../../../types/server/user/property/DeleteUserPropertyResultType";
+
+export type PropertyAPIOptions = {
+    debug: boolean,
+    serverBaseUrl?: string,
+}
 
 /**
  * Property API
@@ -16,13 +20,17 @@ export default class PropertyAPI {
     debug = false;
     instance: AxiosInstance
     
-    constructor(token: string, debug=false) {
-        this.debug = debug;
+    constructor(token: string, options: PropertyAPIOptions = {
+        debug: false,
+    }) {
+        this.debug = options.debug;
         
-        const url = LocationSelection.realEstate();
-        
-        // // Url
-        // const url = SERVER_URL_MAPPINGS.REAL_ESTATE;
+        let url = '';
+        if(!options.serverBaseUrl) {
+            url = SERVERS_DEFAULT_LOCATION['express-real-estate'];
+        } else {
+            url = options.serverBaseUrl;
+        }
         
         // Create instance
         this.instance = createAxiosInstance(url, "", token);

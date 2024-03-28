@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import { LocationSelection } from "felixriddle.configuration-mappings";
+import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
 
 import UserAPI from "../user/UserAPI";
 import createAxiosInstance from "../../createAxiosInstance";
@@ -16,6 +16,11 @@ import BackdoorConfirmEmailInputType from "../../types/server/authentication/aut
 import BackdoorConfirmEmailResultType from "../../types/server/authentication/auth/BackdoorConfirmEmailResultType";
 import PropertyAPI from "../user/property/PropertyAPI";
 import PublicPropertyAPI from "../property/PropertyAPI";
+
+export interface FrontendAuthAPIOptions {
+    debug: boolean,
+    serverBaseUrl?: string,
+}
 
 /**
  * Auth API
@@ -33,11 +38,18 @@ export default class FrontendAuthAPI {
      * User data
      * 
      */
-    constructor(debug: boolean = false) {
-        this.debug = debug;
+    constructor(options: FrontendAuthAPIOptions = {
+        debug: false,
+    }) {
+        this.debug = options.debug;
         
         // Set server url
-        this.serverUrl = LocationSelection.expressAuthentication();
+        if(!options.serverBaseUrl) {
+            this.serverUrl = SERVERS_DEFAULT_LOCATION['express-authentication'];
+        } else {
+            this.serverUrl = options.serverBaseUrl;
+        }
+        
         if(this.debug) {
             console.log(`Server url: ${this.debug}`);
         }
@@ -74,7 +86,7 @@ export default class FrontendAuthAPI {
     async confirmUserEmailWithPrivateKey(email: string): Promise<BackdoorConfirmEmailResultType> {
         // TODO: Available on the same server
         // const backdoorServerUrl = SERVER_URL_MAPPINGS.BACKDOOR_SERVER_ACCESS;
-        const backdoorServerUrl = LocationSelection.backdoorServerAccess();
+        const backdoorServerUrl = SERVERS_DEFAULT_LOCATION['backdoor-server-access'];
         if(!backdoorServerUrl) {
             throw Error("You have to set 'BACKDOOR_SERVER_ACCESS_URL'")
         };
