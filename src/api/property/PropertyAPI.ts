@@ -1,7 +1,6 @@
 import { AxiosInstance } from "axios";
 
-import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
-
+import { SERVERS_DEFAULT_LOCATION } from "../../index";
 import createAxiosInstance from "../../createAxiosInstance";
 
 export interface PropertyAPIOptions {

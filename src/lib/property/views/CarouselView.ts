@@ -1,4 +1,4 @@
-import ImagesAPI from "../images/ImagesAPI.js";
+import ImagesAPI from "../images/ImagesAPI";
 
 /**
  * Carousel view

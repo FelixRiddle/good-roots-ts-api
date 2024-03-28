@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
+
 import RegisterInputType from "../types/server/authentication/auth/RegisterInputType";
 import LoginInputType from "../types/server/authentication/auth/LoginInputType";
 import ExpressAuthentication from "../api/auth/ExpressAuthentication";

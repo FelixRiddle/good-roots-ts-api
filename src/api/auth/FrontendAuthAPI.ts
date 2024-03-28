@@ -1,7 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 
-import { SERVERS_DEFAULT_LOCATION } from "felixriddle.configuration-mappings";
-
+import { SERVERS_DEFAULT_LOCATION } from "../../index";
 import UserAPI from "../user/UserAPI";
 import createAxiosInstance from "../../createAxiosInstance";
 import BackendServerAccessAPI from "../backdoor/BackendServerAccessAPI";

@@ -1,7 +1,8 @@
 import axios, { AxiosInstance } from "axios";
-import PropertyImages from "./PropertyImages.js";
-import createAxiosInstance from "../../../createAxiosInstance.js";
-import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS.js";
+
+import PropertyImages from "./PropertyImages";
+import createAxiosInstance from "../../../createAxiosInstance";
+import SERVER_URL_MAPPINGS from "../../../mappings/env/SERVER_URL_MAPPINGS";
 
 /**
  * Images API

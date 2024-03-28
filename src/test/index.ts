@@ -1,7 +1,5 @@
 import runAllApiTests from "./api";
 
-import MapConfig from "felixriddle.configuration-mappings";
-
 /**
  * Run all tests
  */

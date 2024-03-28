@@ -21,6 +21,13 @@ import Status from "./types/Status";
 import FieldStatusType from "./types/status/FieldStatusType";
 import FieldType from "./types/input/FieldType";
 
+const SERVERS_DEFAULT_LOCATION = {
+    "good-roots": "http://localhost:3000",
+    "express-authentication": "http://localhost:38001",
+    "backdoor-server-access": "http://localhost:38002",
+    "express-real-estate": "http://localhost:38003"
+};
+
 export {
     // Api's
     ExpressAuthentication,
@@ -36,6 +43,8 @@ export {
     AuthMarkupController,
     
     // Config/Maps
+    // The same thing but well anyways, I don't have time to go around fixing code
+    SERVERS_DEFAULT_LOCATION,
     SERVER_URL_MAPPINGS,
 }
 

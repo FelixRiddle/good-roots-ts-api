@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
-import { LocationSelection } from "felixriddle.configuration-mappings";
+import { SERVERS_DEFAULT_LOCATION } from "../../../index";
 
 import FrontendAuthAPI from "../FrontendAuthAPI";
 import BackendServerAccessAPI from "../../backdoor/BackendServerAccessAPI";
@@ -9,10 +9,16 @@ import SendResetEmailResultType from "../../../types/server/authentication/auth/
 import DataResultType from "../../../types/server/authentication/user/DataResultType";
 import CompleteUserData from "../../../types/CompleteUserData";
 
+export type ResetPasswordAPIOptions = {
+    debug: boolean,
+    serverBaseUrl?: string
+}
+
 /**
  * Non authenticated reset password API
  */
 export default class ResetPasswordAPI {
+    debug: boolean;
     userData: CompleteUserData;
     instance: AxiosInstance;
     backdoorServerUrl: string;
@@ -20,11 +26,18 @@ export default class ResetPasswordAPI {
     /**
      * @param {object} userData User data
      */
-    constructor(userData: CompleteUserData) {
+    constructor(userData: CompleteUserData, options: ResetPasswordAPIOptions = {
+        debug: false,
+    }) {
         this.userData = userData;
         
-        const url = LocationSelection.expressAuthentication();
-        this.backdoorServerUrl = LocationSelection.backdoorServerAccess();
+        this.debug = options.debug;
+        
+        if(!options.serverBaseUrl) {
+            this.backdoorServerUrl = SERVERS_DEFAULT_LOCATION['express-authentication'];
+        } else {
+            this.backdoorServerUrl = options.serverBaseUrl;
+        }
         
         // Headers
         let headers = {
@@ -32,7 +45,7 @@ export default class ResetPasswordAPI {
         };
         this.instance = axios.create({
             withCredentials: true,
-            baseURL: url,
+            baseURL: this.backdoorServerUrl,
             timeout: 2000,
             headers,
         });

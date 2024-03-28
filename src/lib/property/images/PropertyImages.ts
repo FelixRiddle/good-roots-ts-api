@@ -1,4 +1,3 @@
-import ImagesAPI from "./ImagesAPI";
 
 type EmptyCb = () => void;
 
