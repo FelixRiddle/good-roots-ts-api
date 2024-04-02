@@ -46,7 +46,7 @@ export default class PropertyAPI {
             .catch((err) => {
                 console.error(err);
                 throw Error("Couldn't create property");
-            })
+            });
         
         return res.data;
     }

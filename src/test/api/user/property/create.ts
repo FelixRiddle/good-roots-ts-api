@@ -1,7 +1,7 @@
-import CreateUserPropertyInputType from "../../../types/server/user/property/CreateUserPropertyInputType";
-import TestLib from "../../TestLib";
-import { DEFAULT_PROPERTY } from "../../lib/property";
-import { testMessage } from "../../testMessage";
+import CreateUserPropertyInputType from "../../../../types/server/user/property/CreateUserPropertyInputType";
+import TestLib from "../../../TestLib";
+import { DEFAULT_PROPERTY } from "../../../lib/property";
+import { testMessage } from "../../../testMessage";
 
 /**
  * Create property
@@ -16,6 +16,7 @@ export async function propertyApiCreateTest() {
         
         // Create some property
         const createResult = await api.create(DEFAULT_PROPERTY);
+        
         const deleteResults = await api.userDeleteAll();
         
         await testLib.deleteUser();
@@ -24,6 +25,7 @@ export async function propertyApiCreateTest() {
         result = propertyCreated;
     } catch(err) {
         // Do nothing, we just don't want to stop code from running
+        console.error(err);
     }
     
     testMessage(result, "Create property");

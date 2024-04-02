@@ -40,19 +40,34 @@ export default class PropertyAPI {
     /**
      * Fetch all
      */
-    fetchAll() {
+    async fetchAll() {
         if(this.debug) {
             console.log(`Fetching properties at /property/operation/get_all`);
             console.log(`That is for the public properties`);
         }
         
-        const res = this.instance.get("/operation/get_all")
+        const res = await this.instance.get("/operation/get_all")
             .then((res) => {
                 return res.data;
             })
             .catch((err) => {
                 console.error(err);
                 throw Error("Couldn't fetch the properties");
+            });
+        
+        return res;
+    }
+    
+    // --- Attributes ---
+    /**
+     * Get attributes
+     */
+    async getAttributes() {
+        const res = await this.instance.get("/attributes")
+            .then((res) => res.data)
+            .catch((err) => {
+                console.error(err);
+                throw Error("Couldn't fetch attributes");
             });
         
         return res;

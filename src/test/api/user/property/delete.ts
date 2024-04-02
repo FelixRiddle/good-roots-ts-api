@@ -1,7 +1,7 @@
-import TestLib from "../../TestLib";
-import { DEFAULT_PROPERTY } from "../../lib/property";
-import PropertyTestLib from "../../lib/property/PropertyTestLib";
-import { testMessage } from "../../testMessage";
+import TestLib from "../../../TestLib";
+import { DEFAULT_PROPERTY } from "../../../lib/property";
+import PropertyTestLib from "../../../lib/property/PropertyTestLib";
+import { testMessage } from "../../../testMessage";
 
 /**
  * Delete property test
