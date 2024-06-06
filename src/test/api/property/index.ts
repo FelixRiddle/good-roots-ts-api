@@ -1,4 +1,5 @@
 import PropertyAPI from "../../../api/property/PropertyAPI";
+import colors from "../../../colors";
 import { testMessage } from "../../testMessage";
 
 /**
@@ -22,5 +23,7 @@ async function getAttributes() {
  * Run all property tests
  */
 export default async function runAllPropertyTests() {
+    console.log(colors.fg.magenta, 'Public(endpoint) property', colors.fg.white);
+    
     await getAttributes();
 }
