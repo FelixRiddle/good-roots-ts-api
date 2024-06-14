@@ -79,7 +79,6 @@ export default class BackendServerAccessAPI {
                 return undefined;
             });
         
-        
         if(res) {
             return res.data.key;
         } else {

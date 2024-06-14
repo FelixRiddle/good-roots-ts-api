@@ -4,6 +4,7 @@ import FrontendAuthAPI from "./api/auth/FrontendAuthAPI";
 import PropertyAPI from "./api/property/PropertyAPI";
 import SERVER_URL_MAPPINGS from "./mappings/env/SERVER_URL_MAPPINGS";
 import UserAPI from "./api/user/UserAPI";
+import createAxiosInstance from "./createAxiosInstance";
 
 // Images
 import ImagesAPI from "./lib/property/images/ImagesAPI";
@@ -41,6 +42,8 @@ export {
     
     // Markup
     AuthMarkupController,
+    
+    createAxiosInstance,
     
     // Config/Maps
     // The same thing but well anyways, I don't have time to go around fixing code
