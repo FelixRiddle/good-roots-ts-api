@@ -5,6 +5,7 @@ import PropertyAPI from "./api/property/PropertyAPI";
 import SERVER_URL_MAPPINGS from "./mappings/env/SERVER_URL_MAPPINGS";
 import UserAPI from "./api/user/UserAPI";
 import createAxiosInstance from "./createAxiosInstance";
+import ResetPasswordAPI from "./api/auth/password/ResetPasswordAPI";
 
 // Images
 import ImagesAPI from "./lib/property/images/ImagesAPI";
@@ -35,6 +36,7 @@ export {
     FrontendAuthAPI,
     PropertyAPI,
     UserAPI,
+    ResetPasswordAPI,
     
     CarouselView,
     ImagesAPI,
