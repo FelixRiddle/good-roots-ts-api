@@ -1,4 +1,4 @@
-// Complete user data, with no missing fields
+// User data without some sensitive information
 export default interface CompleteUserData {
     id: number,
     name: string,

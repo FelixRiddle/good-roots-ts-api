@@ -113,7 +113,15 @@ export default class AuthMarkupController {
                     email: userData.email,
                     password: userData.password,
                 };
-                const loginResult = await api.loginUser(loginInput);
+                const loginResult: LoginResultType = await api.loginUser(loginInput);
+                
+                // If successful store some information in the frontend
+                if(loginResult.userLoggedIn) {
+                    // How do you even test this? With puppeteer?
+                    const user = loginResult.user;
+                    
+                    localStorage.setItem('user', JSON.stringify(user));
+                }
                 
                 this.responseResults.push(loginResult);
                 break;
